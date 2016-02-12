@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Camera.SelectRay.__init__ import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *

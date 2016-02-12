@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Camera.Calibrate.__init__ import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -140,17 +140,15 @@ class CalibrateCameraWithMarker(BaseWidget):
 					obj_points.append(pattern_points)
 				else:
 				    #QtGui.QMessageBox.alert(None, 'Error', 'No chessboards found.' )
-				    print "no chessboards found"
+				    print("no chessboards found")
 				
 				
-
-			print 'ok'
 
 			if good_images>0:
 				rms, camera_matrix, dist_coefs, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, (w, h))
-				print "RMS:", rms
-				print "camera matrix:\n", camera_matrix
-				print "distortion coefficients: ", dist_coefs.ravel()
+				print("RMS:", rms)
+				print("camera matrix:\n", camera_matrix)
+				print("distortion coefficients: ", dist_coefs.ravel())
 
 				self._parent._distortion.value = str(list(dist_coefs.ravel()))
 				self._parent._fxField.value = str(camera_matrix[0,0])

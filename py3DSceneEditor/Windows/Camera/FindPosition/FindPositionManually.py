@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Camera.FindPosition.__init__ import *
 from numpy import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -52,13 +52,13 @@ class FindPositionManually(BaseWidget):
         marker = self._object.value
         objectPoints = float32([marker.point0, marker.point1, marker.point2, marker.point3, marker.point4])
 
-        print "########################################################"
-        print 'Camera matrix',  self._parent.cameraMatrix
-        print 'Distortion', self._parent.cameraDistortion
+        print("########################################################")
+        print('Camera matrix',  self._parent.cameraMatrix)
+        print('Distortion', self._parent.cameraDistortion)
         
-        print "objectPoints", objectPoints
-        print "pointsList", self._pointsList
-        print "########################################################"
+        print("objectPoints", objectPoints)
+        print("pointsList", self._pointsList)
+        print("########################################################")
 
         retval, rvecs, tvecs = cv2.solvePnP(
             objectPoints,
@@ -69,7 +69,7 @@ class FindPositionManually(BaseWidget):
             objectPoints,
             float32(self._pointsList), self._parent.cameraMatrix, self._parent.cameraDistortion)"""
 
-        print rvecs, tvecs
+        print(rvecs, tvecs)
         rotM = cv2.Rodrigues( rvecs )[0]
         camPos = -matrix(rotM).T*matrix(tvecs)
         camRotVector = cv2.Rodrigues(matrix(rotM).T)[0]

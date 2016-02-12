@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Camera.FindPosition.__init__ import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -30,7 +30,7 @@ class FindPositionWithChessMarker(FindPositionWithARMarker):
 
 		res, img= cv2.threshold( img, self._threshold.value, 255, binary)
 		found, corners = cv2.findChessboardCorners(img, pattern_size)
-		print found
+		
 		if found:
 			term = ( cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_COUNT, 30, 0.1 )
 			cv2.cornerSubPix(img, corners, (5, 5), (-1, -1), term)

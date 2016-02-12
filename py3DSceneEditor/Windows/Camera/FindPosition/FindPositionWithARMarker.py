@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Camera.FindPosition.__init__ import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -51,7 +51,7 @@ class FindPositionWithARMarker(BaseWidget):
 		rectangles = marker_detector.process(gray, thresh)
 
 		if len(rectangles)>0:
-			print "found"
+			print("found")
 			rvecs, tvecs = rectangles[0]._rvecs, rectangles[0]._tvecs
 
 			rotM 		 = cv2.Rodrigues( rvecs )[0]
@@ -64,7 +64,7 @@ class FindPositionWithARMarker(BaseWidget):
 		
 			
 		else:
-			print "not found"
+			print("not found")
 			
 	def show(self):
 		self._player.value = self._parent._videofile.value

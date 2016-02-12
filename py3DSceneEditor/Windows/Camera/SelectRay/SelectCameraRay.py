@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Camera.SelectRay.__init__ import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -33,8 +33,8 @@ class SelectCameraRay(BaseWidget):
 
 		if self._point:
 			cv2.circle(frame, self._point, 4, (0,0,255), -1)
-	        cv2.circle(frame, self._point, 2, (0,255,0), -1)
-        
+			cv2.circle(frame, self._point, 2, (0,255,0), -1)
+		
 		return frame
 
 

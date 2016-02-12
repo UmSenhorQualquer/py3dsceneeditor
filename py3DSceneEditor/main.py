@@ -1,19 +1,38 @@
 import sys, os, numpy as np
 
-from __init__ import *
+sys.path.append("..")
 
-from Windows.Camera.CameraWindow 	import CameraWindow
-from Windows.Object.ObjectWindow 	import ObjectWindow
-from Windows.Object.TriangleWindow 	import TriangleWindow
-from Windows.Object.PointWindow 	import PointWindow
-from Windows.Object.RectangleWindow import RectangleWindow
-from Windows.Object.EllipsoidWindow import EllipsoidWindow
-from Windows.Object.MarkerWindow 	import MarkerWindow
-from Windows.Object.EllipseWindow 	import EllipseWindow
-from Windows.Object.CylinderWindow 	import CylinderWindow
-from Windows.Object.PlaneWindow 	import PlaneWindow
-from Windows.Object.WavefrontWindow import WavefrontWindow
-from Windows.Object.TreeSceneModel 	import TreeItem, TreeModel
+from OpenGL.GL 		import *
+from OpenGL.GLUT 	import *
+from OpenGL.GLU 	import *
+from PyQt4 			import QtGui
+import pyforms
+from pyforms 			import BaseWidget
+from pyforms.Controls 	import ControlButton
+from pyforms.Controls 	import ControlOpenGL
+from pyforms.Controls 	import ControlSlider
+from pyforms.Controls 	import ControlText
+from pyforms.Controls 	import ControlList
+from pyforms.Controls 	import ControlCombo
+from pyforms.Controls 	import ControlFile
+from pyforms.Controls 	import ControlDockWidget
+from pyforms.Controls 	import ControlToolBox
+from pyforms.Controls 	import ControlPlayer
+from pyforms.Controls 	import ControlTreeView
+
+
+from py3DSceneEditor.Windows.Camera.CameraWindow 	import CameraWindow
+from py3DSceneEditor.Windows.Object.ObjectWindow 	import ObjectWindow
+from py3DSceneEditor.Windows.Object.TriangleWindow 	import TriangleWindow
+from py3DSceneEditor.Windows.Object.PointWindow 	import PointWindow
+from py3DSceneEditor.Windows.Object.RectangleWindow import RectangleWindow
+from py3DSceneEditor.Windows.Object.EllipsoidWindow import EllipsoidWindow
+from py3DSceneEditor.Windows.Object.MarkerWindow 	import MarkerWindow
+from py3DSceneEditor.Windows.Object.EllipseWindow 	import EllipseWindow
+from py3DSceneEditor.Windows.Object.CylinderWindow 	import CylinderWindow
+from py3DSceneEditor.Windows.Object.PlaneWindow 	import PlaneWindow
+from py3DSceneEditor.Windows.Object.WavefrontWindow import WavefrontWindow
+from py3DSceneEditor.Windows.Object.TreeSceneModel 	import TreeItem, TreeModel
 
 from py3DEngine.scenes.GLScene import GLScene
 from py3DEngine.utils.WavefrontOBJFormat.WavefrontOBJReader import WavefrontOBJReader
@@ -34,8 +53,8 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self._objectsTypes 	= ControlCombo("Type")
 		self._addObjectBtn 	= ControlButton("Add object")
 		self._toolbox 		= ControlToolBox('ToolBox')
-		self._tooldock		= ControlDockWidget('Objects', 		  side=ControlDockWidget.SIDE_RIGHT)
-		self._detaildock	= ControlDockWidget('Object details', side=ControlDockWidget.SIDE_RIGHT)
+		self._tooldock		= ControlDockWidget('Scene', 		  side=ControlDockWidget.SIDE_RIGHT, order=0)
+		self._detaildock	= ControlDockWidget('Object details', side=ControlDockWidget.SIDE_RIGHT, order=1)
 		self._objectsTree	= ControlTreeView('Objects')
 		
 		self._formset = [ '_scene' ]
@@ -97,8 +116,9 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 	
 		#self.__loadScene('/home/ricardo/Desktop/01Apollo201403210900/scene_new.obj')
+		self.__loadScene('scene.obj')
 
-		print "------------ loaded -------------------------"
+		print("------------ loaded -------------------------")
 
 	########################################################################
 	############################### CAMERA #################################
@@ -149,13 +169,13 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 	def __updateObjectsTree(self, objects=None, treeItemNode=None):
 		root = False
+		print("__updateObjectsTree")
 		if treeItemNode==None: 	
 			treeItemNode = self._objectsTree.model().invisibleRootItem()
 			treeItemNode.removeRows(0, treeItemNode.rowCount() )
 			root = True
 
 		if objects==None: objects = self._objects
-
 
 		for obj in objects:
 			if not(root and obj.parentObj!=None):
@@ -188,7 +208,18 @@ class SceneCalibrator(BaseWidget, GLScene):
 			if obj!=None and ( (item==child and child.text()==item.text()) or child.text()!=item.text() ): 
 				child_obj = self.getObject( child.text() )
 				obj.addChild(child_obj)
-			self.recursivelySetHierarchyRoot( child, item ) 
+			self.recursivelySetHierarchyRoot( child, item )
+
+	def find_node_by_name(self, name, root=None):
+		if root==None: root = self._objectsTree.value
+		if str(root.text())==name: return root
+		
+		for index in range(root.rowCount()):
+			child = root.child(index)
+			res = self.find_node_by_name( name, child )
+			if res: return res
+
+		return None
 		
 
 	########################################################################
@@ -214,7 +245,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 	def __exportData(self):
 		filename = QtGui.QFileDialog.getSaveFileName(self, "Save file", "", "*.obj")
 		if filename: 
-			if not filename.endsWith('.obj'): filename += '.obj'
+			if not filename.endswith('.obj'): filename += '.obj'
 			self.__saveScene(filename)
 
 	def __loadScene(self, filename):
@@ -238,7 +269,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		try:
 			return self._objects
 		except:
-			print "No objects yet"
+			print( "No objects yet")
 			return []
 
 	@objects.setter
@@ -260,6 +291,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 			#For historical reasons
 			if objtype=='WavefrontObject' or objtype=='TerrainObject': 	obj = WavefrontWindow(self)
 
+			print(o)
 			obj.wavefrontobject = o; self._objects.append(obj)
 
 		self.initHierarchy(value)
@@ -271,7 +303,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		try:
 			return [self._cameras.getCell(0,row)._window for row in range(self._cameras.count)]
 		except:
-			print "No cameras yet"
+			print("No cameras yet")
 			return []
 
 

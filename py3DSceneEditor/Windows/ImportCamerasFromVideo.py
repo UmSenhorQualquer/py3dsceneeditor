@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.__init__ import *
 
 
 class ImportCamerasFromVideo(BaseWidget):

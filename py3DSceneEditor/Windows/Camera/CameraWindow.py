@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Camera.__init__ import *
 from numpy import *
 from py3DEngine.cameras.Camera 					import Camera
 from py3DEngine.cameras.Ray 						import Ray
@@ -139,12 +139,12 @@ class CameraWindow(BaseWidget, Camera):
 				ray = Ray(p0, p1)
 				objs.append( ray )
 			except:
-				print "error converting ray"
+				print( "error converting ray")
 		self.rays = objs
 
 	def __rayChanged(self, row=0, col=0):
 		if self._updating: 
-			print "Updated"
+			print("Updated")
 			self.__loadRays()
 			self._parent.calculateCollisions()
 
@@ -193,7 +193,6 @@ class CameraWindow(BaseWidget, Camera):
 		self._findPositionManuallyWindow.show()
 
 	def __showObjectsProjectionEvent(self):
-		print "show"
 		self._objectsProjectionWindow.show()
 		
 	def __findPositionWithArMarkerEvent(self): self._findPositionWithARMarker.show()
@@ -215,7 +214,7 @@ class CameraWindow(BaseWidget, Camera):
 			self.__loadRays()
 			self._parent.calculateCollisions()
 		except: 
-			print "error in CameraWindow in the function __cameraPositionChanged"
+			print("error in CameraWindow in the function __cameraPositionChanged")
 
 	def __cameraRotationChanged(self):
 		try:
@@ -223,7 +222,7 @@ class CameraWindow(BaseWidget, Camera):
 			#self._parent.repaint()
 			self.__loadRays()
 			self._parent.calculateCollisions()
-		except: print "error in CameraWindow in the function __cameraRotationChanged"
+		except: print("error in CameraWindow in the function __cameraRotationChanged")
 
 	def __displayFocalLengthChanged(self): self.maxFocalLength = float(self._displayFocalLength.value); self._parent.repaint()
 	def __displayColorChanged(self): self._color = eval(self._displayColor.value); self._parent.repaint()

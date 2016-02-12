@@ -1,4 +1,4 @@
-from __init__ import *
+from py3DSceneEditor.Windows.Object.__init__ import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -58,12 +58,10 @@ class ObjectWindow(BaseWidget):
 
 	def __nameChanged(self):
 		self.setWindowTitle(self._objectName.value)
-		treeItem = self._parent._objectsTree.selectedItem
-		if treeItem!=None: treeItem.setText(self._objectName.value)
+		treeItem = self._parent.find_node_by_name(self.name)
 		self.name = self._objectName.value
-
-		#self.parentRowControl.setText(self._objectName.value)
-
+		if treeItem: treeItem.setText(self.name)
+		
 	def afterLoadSceneObject(self):
 		super(ObjectWindow, self).afterLoadSceneObject()		
 		self._objectName.value			= self.name
