@@ -39,7 +39,7 @@ pip install https://github.com/UmSenhorQualquer/pyforms/archive/master.zip
 pip show pyforms
 
 pip uninstall -y py3DEngine
-pip install %BUILDSETTINGSDIR%\py3DEngine_distribution\
+pip install "%BUILDSETTINGSDIR%\py3DEngine_distribution\"
 
 rem echo "Running pyinstaller --additional-hooks-dir %BUILDSETTINGSDIR%\hooks --name %PROJECTNAME% --icon %BUILDSETTINGSDIR%\%ICONNAME% --onefile %MAINSCRIPT%"
 
