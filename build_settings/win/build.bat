@@ -16,7 +16,7 @@ set DISTOUTDIR=%WORKSPACE%\dist
 set ICONNAME=cf_icon_128x128.ico
 
 python setup.py --version 	> software_version.txt
-"C:\Program Files\Git\bin\git.exe" rev-list --count master > git_version.txt
+"C:\Program Files\Git\bin\git.exe" rev-list  --all --count > git_version.txt
 SET /p DEV_VERSION= < software_version.txt
 SET /p GIT_VERSION= < git_version.txt
 SET DEV_VERSION=%DEV_VERSION%.build-%GIT_VERSION%
