@@ -116,7 +116,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 	
 		#self.__loadScene('/home/ricardo/Desktop/01Apollo201403210900/scene_new.obj')
-		self.__loadScene('scene.obj')
+		#self.__loadScene('scene.obj')
 
 		print("------------ loaded -------------------------")
 
@@ -243,7 +243,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		if filename: self.__loadScene(filename)
 
 	def __exportData(self):
-		filename = QtGui.QFileDialog.getSaveFileName(self, "Save file", "", "*.obj")
+		filename = str(QtGui.QFileDialog.getSaveFileName(self, "Save file", "", "*.obj"))
 		if filename: 
 			if not filename.endswith('.obj'): filename += '.obj'
 			self.__saveScene(filename)
@@ -339,7 +339,6 @@ class SceneCalibrator(BaseWidget, GLScene):
 ##################################################################################################################
 ##################################################################################################################
 ##################################################################################################################
-def main():
-	pyforms.startApp( SceneCalibrator )
+def main(): pyforms.startApp( SceneCalibrator )
 
 if __name__ == "__main__":	main()
