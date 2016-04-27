@@ -116,7 +116,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 	
 		#self.__loadScene('/home/ricardo/Desktop/01Apollo201403210900/scene_new.obj')
-		self.__loadScene('scene.obj')
+		self.__loadScene('soccer.obj')
 
 		print("------------ loaded -------------------------")
 
