@@ -1,27 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-__author__      = "Ricardo Ribeiro"
-__credits__     = ["Ricardo Ribeiro"]
-__license__     = "MIT"
-__version__     = "0.0"
-__maintainer__  = "Ricardo Ribeiro"
-__email__       = "ricardojvr@gmail.com"
-__status__      = "Development"
-
-
 from setuptools import setup
 
+with open('py3DSceneEditor/__init__.py', 'r') as fd:
+	__version__ 	= eval(fd.readline().split('=')[1])
+	__author__      = eval(fd.readline().split('=')[1])
+	__credits__     = eval(fd.readline().split('=')[1])
+	__license__     = eval(fd.readline().split('=')[1])
+	__maintainer__  = eval(fd.readline().split('=')[1])
+	__email__       = eval(fd.readline().split('=')[1])
+	__status__      = eval(fd.readline().split('=')[1])
+
 setup(
+	name				='Python 3D scene editor',
+	version 			=__version__,
+	description 		="""This application is used to construct 3D scenes to be used with the Python 3D Engine.""",
+	author  			=__author__,
+	author_email		=__email__,
+	license 			=__license__,
 
-	name				='py3DSceneEditor',
-	version 			='0.0',
-	description 		="""""",
-	author  			='Ricardo Ribeiro',
-	author_email		='ricardojvr@gmail.com',
-	license 			='MIT',
-
-	
 	packages=[
 		'py3DSceneEditor',
 		'py3DSceneEditor.Windows',
@@ -33,14 +30,13 @@ setup(
 
 	package_data={'py3DSceneEditor': ['style.css']},
 
-
-	#install_requires=[
-	#	"pyforms >= 0.1.3",
-	#	"pyopengl >= 3.1.0",
-	#	"numpy >= 1.6.1"
-	#],
+	install_requires=[
+		"pyforms >= 0.1.3",
+		"pyopengl >= 3.1.0",
+		"numpy >= 1.6.1"
+	],
 
 	entry_points={
-		'console_scripts':['py3DSceneEditorApp=py3DSceneEditor.main:main']
+		'console_scripts':['py3DSceneEditorApp=py3DSceneEditor:__main__']
 	}
 )

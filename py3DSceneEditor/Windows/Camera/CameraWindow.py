@@ -8,6 +8,7 @@ from py3DSceneEditor.Windows.Camera.FindPosition.FindPositionManually 			import 
 from py3DSceneEditor.Windows.Camera.Calibrate.CalibrateCameraWithMarker 		import CalibrateCameraWithMarker
 from py3DSceneEditor.Windows.Camera.SelectRay.SelectCameraRay					import SelectCameraRay
 from py3DSceneEditor.Windows.Camera.SelectRay.ObjectsProjection				import ObjectsProjection
+from py3DSceneEditor.Windows.Camera.Calibrate.ManualCalibration 			import ManualCalibration
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -23,6 +24,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._updating = False
 
 		self._calibratorWindow 				= CalibrateCameraWithMarker(self)
+		self._manualCalibrationWindow 		= ManualCalibration(self)
 		self._findPositionWithARMarker 		= FindPositionWithARMarker(self)
 		self._findPositionWithChessMarker 	= FindPositionWithChessMarker(self)
 		self._findPositionManuallyWindow 	= FindPositionManually(self)
@@ -34,12 +36,14 @@ class CameraWindow(BaseWidget, Camera):
 		self._videofile = ControlFile('Video'); 
 		self._distortion = ControlText('Distortion', '[-0.355507045984, 0.176486045122, 0.00165274133906, -0.000138058851007, -0.0518798902631]')
 		self._videoCalibrationBtn = ControlButton('Calibrate')
+		self._videoManualCalibrationBtn = ControlButton('Calibrate manually')
 		
 		self._cameraName = ControlText('Name')
 		self._width = ControlText('Width', "1280")
 		self._height = ControlText('Height', "960")
 		self._fxField = ControlText('Focal x', '973.83868801')
 		self._fyField = ControlText('Focal y', '973.83868801')
+		self._cameraMtx = ControlTextArea('Camera matrix')
 
 		self._displayFocalLength = ControlSlider('Focal length', 1.0, 1.0, 100.0)
 		self._displayColor 		 = ControlText('Color','0.0,0.0,0.0,0.0')
@@ -67,10 +71,12 @@ class CameraWindow(BaseWidget, Camera):
 			('Camera matrix and distortion',
 				[(self._width, self._height),
 				(self._fxField, self._fyField), 
+				self._cameraMtx,
 				self._distortion,
-				self._videoCalibrationBtn]  ),
+				self._videoCalibrationBtn,
+				self._videoManualCalibrationBtn]  ),
 			('Camera transformations',
-				[(self._position,self._rotation),
+				[self._position,self._rotation,
 				self._findPositionWithArMarkerBtn,
 				self._findPositionWithChessMarkerBtn,
 				self._findPosManuallyBtn]
@@ -101,6 +107,7 @@ class CameraWindow(BaseWidget, Camera):
 
 
 		self._raysList.changed 						= self.__rayChanged				
+		self._videoManualCalibrationBtn.value       = self.__manualCalibrateEvent
 		self._videoCalibrationBtn.value 			= self.__calibrateBtnEvent
 		self._findPosManuallyBtn.value 				= self.__findPositionManualEvent
 		self._findPositionWithArMarkerBtn.value 	= self.__findPositionWithArMarkerEvent
@@ -115,6 +122,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._height.changed 		= self.__imagePropHeightChanged
 		self._fxField.changed 		= self.__imagePropFxChanged
 		self._fyField.changed 		= self.__imagePropFyChanged
+		self._cameraMtx.changed     = self.__cameraMtxChanged
 		self._distortion.changed 	= self.__imagePropDistortionChanged
 		
 		self._position.changed 			= self.__cameraPositionChanged
@@ -237,6 +245,15 @@ class CameraWindow(BaseWidget, Camera):
 		self.cameraHeight = float(self._height.value)
 		self.cameraCy = self.cameraHeight / 2.0
 		self._parent.repaint()
+	def __cameraMtxChanged(self):
+		self.cameraMatrix = matrix(eval(self._cameraMtx.value))
+		self._width.value 				= str(self.cameraMatrix[0,2]*2)
+		self._height.value 				= str(self.cameraMatrix[1,2]*2)
+		self._fxField.value 			= str(self.cameraMatrix[0,0])
+		self._fyField.value 			= str(self.cameraMatrix[1,1])
+		self._parent.repaint()
+		print(eval(self._cameraMtx.value))
+
 	def __imagePropFxChanged(self): self.cameraFx = float(self._fxField.value); self._parent.repaint()
 	def __imagePropFyChanged(self): self.cameraFy = float(self._fyField.value); self._parent.repaint()
 	def __imagePropDistortionChanged(self): 
@@ -246,6 +263,9 @@ class CameraWindow(BaseWidget, Camera):
 		self._findPositionWithChessMarker.distortion = self.cameraDistortion
 		self._selectCameraRayWindow._player.refresh()
 
+	def __manualCalibrateEvent(self):
+		self._manualCalibrationWindow.clear()
+		self._manualCalibrationWindow.show()
 
 	def __calibrateBtnEvent(self):
 		self._calibratorWindow.clear()
@@ -331,6 +351,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._displayFocalLength.value 	= self.maxFocalLength
 		self._displayColor.value 		= str(','.join(map(str,self.color)))
 		self._displayFaces.value 		= self.showFaces
+		self._cameraMtx.value 			= str(self.cameraMatrix)
 		
 		self.__loadRays()
 		
