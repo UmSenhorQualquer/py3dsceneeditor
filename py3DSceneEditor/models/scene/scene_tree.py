@@ -19,7 +19,6 @@ from pyforms.Controls 	import ControlDockWidget
 from pyforms.Controls 	import ControlToolBox
 from pyforms.Controls 	import ControlPlayer
 from pyforms.Controls 	import ControlTreeView
-from pyforms.Controls 	import ControlTree
 from pyforms.Controls 	import ControlMdiArea
 
 
@@ -54,7 +53,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self._axis = None
 
 		self._scenewindow 	= Py3DSceneWindow()
-
+		
 		self._tree 			= ControlTree('Objects')
 		
 
@@ -73,7 +72,6 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self._mdi += self._scenewindow
 
 		self._tooldock.value = self._toolbox
-		self._tooldock.value = self._tree
 		self.docks = {'right': [self._tooldock, self._detaildock] }
 
 		#Events
@@ -127,8 +125,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 				}
 			]
 
-		cameras_node = self._tree.createChild('Cameras')
-		objects_node = self._tree.createChild('Objects')
+	
 
 		print("------------ loaded -------------------------")
 

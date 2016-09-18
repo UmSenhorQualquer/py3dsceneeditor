@@ -194,18 +194,18 @@ class CameraWindow(BaseWidget, Camera):
 			QtGui.QMessageBox.information(None, 'Distance between rays end points', msg )
 
 	def __showSelectCameraRay(self):
-		self._selectCameraRayWindow.show()
+		self._parent._mdi += self._selectCameraRayWindow
 
 	def __findPositionManualEvent(self):
 		self._findPositionManuallyWindow.objects = self._parent.objects
-		self._findPositionManuallyWindow.show()
+		self._parent._mdi += self._findPositionManuallyWindow
 
 	def __showObjectsProjectionEvent(self):
-		self._objectsProjectionWindow.show()
+		self._parent._mdi += self._objectsProjectionWindow
 		
-	def __findPositionWithArMarkerEvent(self): self._findPositionWithARMarker.show()
+	def __findPositionWithArMarkerEvent(self): self._parent._mdi += self._findPositionWithARMarker
 
-	def __findPositionWithChessMarkerEvent(self): self._findPositionWithChessMarker.show()
+	def __findPositionWithChessMarkerEvent(self): self._parent._mdi += self._findPositionWithChessMarker
 
 	def __videofileChanged(self): 
 		self._calibratorWindow._player.value 			= self._videofile.value
@@ -265,11 +265,11 @@ class CameraWindow(BaseWidget, Camera):
 
 	def __manualCalibrateEvent(self):
 		self._manualCalibrationWindow.clear()
-		self._manualCalibrationWindow.show()
+		self._parent._mdi += self._manualCalibrationWindow
 
 	def __calibrateBtnEvent(self):
 		self._calibratorWindow.clear()
-		self._calibratorWindow.show()
+		self._parent._mdi += self._calibratorWindow
 
 	def __nameChanged(self):
 		self.setWindowTitle(self._cameraName.value)
