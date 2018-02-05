@@ -36,7 +36,7 @@ class ObjectWindow(BaseWidget):
 		self._refractionField.changed_event   = self.__refraction_changed_evt
 		self._parent_obj.changed_event 		  = self.__parent_obj_changed_evt
 
-		self.setMinimumHeight(700)
+		#self.setMinimumHeight(700)
 		self.setMinimumWidth(400)
 		self.set_margin(5)
 
@@ -91,16 +91,25 @@ class ObjectWindow(BaseWidget):
 	def __active_changed_evt(self): self.active = self._activeField.value
 	
 	def __color_changed_evt(self): 
-		self.color = eval(self._colorField.value)
-		self._parent.calculateCollisions()
+		try:
+			self.color = eval(self._colorField.value)
+			self._parent.calculateCollisions()
+		except:
+			pass
 
 	def __position_changed_evt(self):
-		self.position = eval(self._positionField.value)
-		self._parent.calculateCollisions()
+		try:
+			self.position = eval(self._positionField.value)
+			self._parent.calculateCollisions()
+		except:
+			pass
 
 	def __rotation_changed_evt(self):
-		self.rotation = eval(self._rotationField.value)
-		self._parent.calculateCollisions()
+		try:
+			self.rotation = eval(self._rotationField.value)
+			self._parent.calculateCollisions()
+		except:
+			pass
 
 	def __center_of_mass_changed_evt(self):
 		self.centerOfMass = eval(self._centerOfMassField.value)

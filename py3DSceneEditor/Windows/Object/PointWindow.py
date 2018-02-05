@@ -22,8 +22,11 @@ class PointWindow(ObjectWindow, PointObject):
 		self.init_form()
 
 	def __point0Changed(self): 
-		self.point = eval(self._p0.value)
-		self._parent.repaint()
+		try:
+			self.point = eval(self._p0.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	@property
 	def wavefrontobject(self): return super(PointWindow, self).wavefrontobject

@@ -30,24 +30,39 @@ class MarkerWindow(ObjectWindow, MarkerObject):
 		self.init_form()
 
 	def __point0Changed(self): 
-		self.point0 = eval(self._p0.value)
-		self._parent.repaint()
+		try:
+			self.point0 = eval(self._p0.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point1Changed(self): 
-		self.point1 = eval(self._p1.value)
-		self._parent.repaint()
+		try:
+			self.point1 = eval(self._p1.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point2Changed(self): 
-		self.point2 = eval(self._p2.value)
-		self._parent.repaint()
+		try:
+			self.point2 = eval(self._p2.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point3Changed(self): 
-		self.point3 = eval(self._p3.value)
-		self._parent.repaint()
+		try:
+			self.point3 = eval(self._p3.value)
+			self._parent.repaint()
+		except:
+			pass
 
-	def __point4Changed(self): 
-		self.point4 = eval(self._p4.value)
-		self._parent.repaint()
+	def __point4Changed(self):
+		try:
+			self.point4 = eval(self._p4.value)
+			self._parent.repaint()
+		except:
+			pass
 
 
 	@property

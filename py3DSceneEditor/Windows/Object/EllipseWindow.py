@@ -25,13 +25,18 @@ class EllipseWindow(ObjectWindow, EllipseObject):
 		self.init_form()
 
 	def __faControlChanged(self): 
-		self.fA = eval(self._faControl.value)
-		self._parent.repaint()
+		try:
+			self.fA = eval(self._faControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
-	def __fbControlChanged(self): 
-		self.fB = eval(self._fbControl.value)
-		self._parent.repaint()
-
+	def __fbControlChanged(self):
+		try:
+			self.fB = eval(self._fbControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	@property
 	def wavefrontobject(self): return super(EllipseWindow, self).wavefrontobject

@@ -30,16 +30,25 @@ class EllipsoidWindow(ObjectWindow, EllipsoidObject):
 		self.init_form()
 
 	def __faControlChanged(self): 
-		self.fA = eval(self._faControl.value)
-		self._parent.repaint()
+		try:
+			self.fA = eval(self._faControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __fbControlChanged(self): 
-		self.fB = eval(self._fbControl.value)
-		self._parent.repaint()
+		try:
+			self.fB = eval(self._fbControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __fcControlChanged(self): 
-		self.fC = eval(self._fcControl.value)
-		self._parent.repaint()
+		try:
+			self.fC = eval(self._fcControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
 
 	def afterLoadSceneObject(self):

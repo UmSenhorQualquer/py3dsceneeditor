@@ -118,8 +118,8 @@ class SceneCalibrator(BaseWidget, GLScene):
 			]
 
 
-		self.__loadScene('py-3d-engine/examples/DolphinScene.obj')
-		print("------------ loaded -------------------------")
+		#self.__loadScene('py-3d-engine/examples/DolphinScene.obj')
+		#print("------------ loaded -------------------------")
 
 	########################################################################
 	############################### CAMERA #################################
@@ -163,7 +163,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 	def __delete_object(self):
 		item = self._objtree.selected_item
 		if item!=None:
-			obj = self.getObject(item.text())
+			obj = self.getObject(item.text(0))
 			self._objects.remove(obj)
 			self._objtree -= -1
 			self.calculateCollisions()
@@ -179,6 +179,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		for obj in objects:
 			if not(tree_node==None and obj.parentObj!=None):
 				item = self._objtree.create_child(obj.name, tree_node)
+				self._objtree.add_popup_menu_option('Remove', self.__delete_object, item=item)
 				self.update_objects_tree(obj.childs, item)
 
 		ObjectWindow.update_allobjects_list()

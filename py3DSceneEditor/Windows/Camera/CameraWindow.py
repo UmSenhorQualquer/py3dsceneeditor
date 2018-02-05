@@ -22,7 +22,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._parent = parent
 		self._updating = False
 
-		self.setMinimumHeight(700)
+		#self.setMinimumHeight(700)
 		self.setMinimumWidth(400)
 
 		self._calibratorWindow 				= CalibrateCameraWithMarker(self)
@@ -293,6 +293,8 @@ class CameraWindow(BaseWidget, Camera):
 		if value!=None:
 			self._parentRowControl = value
 			self._cameraName.value = value.text()
+		else:
+			del self._parentRowControl
 		
 	
 	@property

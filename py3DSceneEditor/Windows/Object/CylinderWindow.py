@@ -27,16 +27,25 @@ class CylinderWindow(ObjectWindow, CylinderObject):
 		self.init_form()
 
 	def __faControlChanged(self): 
-		self.fA = eval(self._faControl.value)
-		self._parent.repaint()
+		try:
+			self.fA = eval(self._faControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __fbControlChanged(self): 
-		self.fB = eval(self._fbControl.value)
-		self._parent.repaint()
+		try:
+			self.fB = eval(self._fbControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __heightControlChanged(self): 
-		self.cylinderHeight = eval(self._heightControl.value)
-		self._parent.repaint()
+		try:
+			self.cylinderHeight = eval(self._heightControl.value)
+			self._parent.repaint()
+		except:
+			pass
 
 
 

@@ -26,16 +26,25 @@ class TriangleWindow(ObjectWindow, TriangleObject):
 		self.init_form()
 
 	def __point0Changed(self): 
-		self.point0 = eval(self._p0.value)
-		self._parent.repaint()
+		try:
+			self.point0 = eval(self._p0.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point1Changed(self): 
-		self.point1 = eval(self._p1.value)
-		self._parent.repaint()
+		try:
+			self.point1 = eval(self._p1.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point2Changed(self): 
-		self.point2 = eval(self._p2.value)
-		self._parent.repaint()
+		try:
+			self.point2 = eval(self._p2.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	@property
 	def wavefrontobject(self): return super(TriangleWindow, self).wavefrontobject

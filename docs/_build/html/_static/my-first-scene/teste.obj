@@ -1,0 +1,44 @@
+mtllib teste.mtl
+
+o New camera
+usemtl New cameraMaterial
+v 0.000000000 0.000000000 0.000000000
+# type: Camera
+# cameraMatrix: [654.55, 0.0, 639.5, 0.0, 654.55, 359.5, 0.0, 0.0, 1.0]
+# cameraDistortion: -0.33505070209503174,0.12022607028484344,0.0,0.0,-0.020169565454125404
+# rotationVector: 0.0,0.0,0.0
+# maxFocalLength: 1
+# cameraWidth: 1279.0
+# cameraHeight: 719.0
+# showFaces: True
+# videofile: 
+# visible: True
+# nrays: 1
+# ray_0: 800,500
+
+o Triangle 1
+usemtl Triangle 1Material
+v 10.000000000 10.000000000 10.000000000
+v 10.000000000 -10.000000000 10.000000000
+v -10.000000000 10.000000000 10.000000000
+f 2 3 4
+# position: 0,0,0
+# centerOfMass: 0,0,0
+# rotation: 0,1,0,0
+# active: True
+# refraction: None
+# type: TriangleObject
+
+o  
+usemtl  Material
+v -20.000000000 0.000000000 -20.000000000
+v 20.000000000 0.000000000 -20.000000000
+v 20.000000000 0.000000000 20.000000000
+f 5 6 7
+# position: 0,0,0
+# centerOfMass: 0,0,0
+# rotation: 0,1,0,0
+# active: True
+# refraction: None
+# type: TriangleObject
+

@@ -37,12 +37,18 @@ class PlaneWindow(ObjectWindow, PlaneObject):
 		self._parent.repaint()
 
 	def __widthChanged(self): 
-		self.objwidth = eval(self._width.value)
-		self._parent.repaint()
+		try:
+			self.objwidth = eval(self._width.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __heightChanged(self): 
-		self.objheight = eval(self._height.value)
-		self._parent.repaint()
+		try:
+			self.objheight = eval(self._height.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def afterLoadSceneObject(self):
 		super(PlaneWindow, self).afterLoadSceneObject()

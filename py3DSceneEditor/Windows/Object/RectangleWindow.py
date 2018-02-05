@@ -28,20 +28,32 @@ class RectangleWindow(ObjectWindow, RectangleObject):
 		self.init_form()
 
 	def __point0Changed(self): 
-		self.point0 = eval(self._p0.value)
-		self._parent.calculateCollisions()
+		try:
+			self.point0 = eval(self._p0.value)
+			self._parent.calculateCollisions()
+		except:
+			pass
 
 	def __point1Changed(self): 
-		self.point1 = eval(self._p1.value)
-		self._parent.calculateCollisions()
+		try:
+			self.point1 = eval(self._p1.value)
+			self._parent.calculateCollisions()
+		except:
+			pass
 
 	def __point2Changed(self): 
-		self.point2 = eval(self._p2.value)
-		self._parent.calculateCollisions()
+		try:
+			self.point2 = eval(self._p2.value)
+			self._parent.calculateCollisions()
+		except:
+			pass
 
 	def __point3Changed(self): 
-		self.point3 = eval(self._p3.value)
-		self._parent.calculateCollisions()
+		try:
+			self.point3 = eval(self._p3.value)
+			self._parent.calculateCollisions()
+		except:
+			pass
 
 
 
