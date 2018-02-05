@@ -32,7 +32,7 @@ ________________
 
 =================================   ============================================================================================================================================
 Ricardo Ribeiro                     from the `Champalimaud Scientific Software Platform <http://neuro.fchampalimaud.org/en/research/platforms/staff/Scientific%20Software/>`_
-									ricardo.ribeiro@research.fchampalimaud.org
+                                    ricardo.ribeiro@research.fchampalimaud.org
 =================================   ============================================================================================================================================
 
 
