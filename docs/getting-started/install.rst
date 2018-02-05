@@ -6,7 +6,7 @@ Install & run
 - Download & install `Anaconda <https://www.anaconda.com/download/>`_ or `Miniconda <https://conda.io/miniconda.html>`_.
 - Download and uncompress the `py3dsceneeditor repository <https://github.com/UmSenhorQualquer/py3dsceneeditor/archive/master.zip>`_.
 - Open the terminal and go to the previous uncompressed directory.
-- Excute in the terminal the next command to install the Anaconda/Miniconda environment.
+- Execute in the terminal the next command to install the Anaconda/Miniconda environment.
 
   .. code-block:: bash
 
@@ -16,10 +16,16 @@ Install & run
 
   .. code-block:: bash
 
-     source activate videoannotator
+     source activate py3dengine-environment
 
-- Excute in the terminal the next command to update the code:
+- Execute in the terminal the next command to update the code:
 	
   .. code-block:: bash
 
      python install.py
+
+- Execute in the terminal the next command open the application:
+	
+  .. code-block:: bash
+
+     python -m py3DSceneEditor

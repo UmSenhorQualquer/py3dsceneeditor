@@ -2,7 +2,8 @@
 My first 3D scene
 ********************
 
-Download the example: `material file </_static/my-first-scene/test.mtl>`_, `object file </_static/my-first-scene/test.obj>`_
+Download the example: `material file <https://raw.githubusercontent.com/UmSenhorQualquer/py3dsceneeditor/refactoring/docs/_static/my-first-scene/teste.mtl>`_, `object file <https://raw.githubusercontent.com/UmSenhorQualquer/py3dsceneeditor/refactoring/docs/_static/my-first-scene/teste.obj>`_
+
 
 Add the first camera and set the camera matrix.
 
