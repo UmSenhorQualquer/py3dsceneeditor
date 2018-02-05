@@ -23,29 +23,15 @@
 ##
 ############################################################################
 
-from PyQt4 import QtCore, QtGui
+from AnyQt.QtGui import QStandardItem, QStandardItemModel
 
-class TreeItem(QtGui.QStandardItem):
+class TreeItem(QStandardItem):
+    
     def __init__(self, obj, parent=None):
         super(TreeItem, self).__init__(obj.name)
-        #self._sceneobject = obj
-    """
-    def setText(self, text):
-        model = self.model()
-        if model!=None:
-            oldtext = str(self.text())
-            if oldtext in model._objects:
-                obj = model._objects[oldtext]
-                del model._objects[oldtext]
-                model._objects[text] = obj                
-        super(TreeItem, self).setText(text)
-    """
 
 
-
-
-
-class TreeModel(QtGui.QStandardItemModel):
+class TreeModel(QStandardItemModel):
     def __init__(self, parent=None):
         super(TreeModel, self).__init__()
         self._objects = {}

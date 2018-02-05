@@ -1,7 +1,5 @@
 from py3DSceneEditor.Windows.Camera.FindPosition.__init__ import *
 from numpy import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
 from py3DSceneEditor.Windows.Object.MarkerWindow import MarkerWindow
 import cv2, pickle
 
@@ -24,17 +22,17 @@ class FindPositionManually(BaseWidget):
             ('_usethresh','_threshold','_invert'),
             '_player', '_points']
 
-        self._player._videoWidget.onDoubleClick = self.onDoubleClickInVideoWindow
-        self._player.processFrame               = self.processFrame
-        self._threshold.changed = self.__thresholdChanged
-        self._usethresh.changed = self.__usethreshChanged
+        self._player.double_click_event  = self.onDoubleClickInVideoWindow
+        self._player.process_frame_event = self.process_frame
+        self._threshold.changed_event    = self.__thresholdChanged
+        self._usethresh.changed_event    = self.__usethreshChanged
         self.__usethreshChanged()
 
         self._pointsList = []
 
-        self.initForm()
+        self.init_form()
         
-        self._points.changed = self.__pointsChangedEvent
+        self._points.changed_event = self.__pointsChangedEvent
         self._findBtn.value = self.__findEvent
         self.setGeometry(0,0, 500,500)
 
@@ -78,7 +76,7 @@ class FindPositionManually(BaseWidget):
         self._parent._position.value    = "%f,%f,%f" % ( camPos[0,0], camPos[1,0], camPos[2,0] )
         self._parent._rotation.value    = "%f,%f,%f" % ( camRotVector[0,0], camRotVector[1,0], camRotVector[2,0] )
        
-    def processFrame(self, frame):
+    def process_frame(self, frame):
         #distortion = self._parent.cameraDistortion
         #distortion = array([0,0,0,0,0])
         #frame = cv2.undistort(frame, self._parent.cameraMatrix, distortion)
@@ -107,7 +105,7 @@ class FindPositionManually(BaseWidget):
     def objects(self, value):
         for marker in value: 
             if isinstance(marker, MarkerWindow):
-                self._object.addItem(marker.name, marker)
+                self._object.add_item(marker.name, marker)
     
     def show(self):
         self._player.value = self._parent._videofile.value
@@ -117,5 +115,5 @@ class FindPositionManually(BaseWidget):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":   app.startApp( BySelectingPoints )
+if __name__ == "__main__":   app.start_app( BySelectingPoints )
     

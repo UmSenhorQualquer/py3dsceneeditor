@@ -4,7 +4,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import cv2
 import numpy as np
-from PyQt4 import QtGui
+
 
 class ManualCalibration(BaseWidget):
 	
@@ -24,23 +24,18 @@ class ManualCalibration(BaseWidget):
 			]
 
 		self._calibrateBtn.value = self.__calibrationEvent
-		self._realobject.showGrid = False
-		self._realobject.showHeader = False
-		self._realobject.showRowsNumber = False
-		self._realobject.selectEntireRow = True
-		self._realobject.addPopupMenuOption('Delete', self.__deleteObjPoint)
+		
+		self._realobject.select_entire_row = True
+		self._realobject.add_popup_menu_option('Delete', self.__deleteObjPoint)
 
-		self._pixelsobject.showGrid = False
-		self._pixelsobject.showHeader = False
-		self._pixelsobject.showRowsNumber = False
-		self._pixelsobject.selectEntireRow = True
-		self._pixelsobject.addPopupMenuOption('Delete', self.__deletePixelPoint)
+		self._pixelsobject.select_entire_row = True
+		self._pixelsobject.add_popup_menu_option('Delete', self.__deletePixelPoint)
 
 		self._addObjPoint.value = self.__addObjectPoint
 
-		self._player.processFrame = self.__processFrame
+		self._player.process_frame_event = self.__process_frame
 		
-		self.initForm()
+		self.init_form()
 		
 		self.setGeometry(0,0, 500,500)
 
@@ -49,7 +44,7 @@ class ManualCalibration(BaseWidget):
 	def __addObjectPoint(self):
 		self._realobject+= ['0,0']
 
-	def __processFrame(self, frame): 
+	def __process_frame(self, frame): 
 		if self._usecalibration.value: 
 			frame = cv2.undistort(frame, self.cameraMatrix, self.distortion)
 
@@ -79,5 +74,5 @@ class ManualCalibration(BaseWidget):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( CalibrateCameraWithMarker )
+if __name__ == "__main__":	 app.start_app( CalibrateCameraWithMarker )
 	

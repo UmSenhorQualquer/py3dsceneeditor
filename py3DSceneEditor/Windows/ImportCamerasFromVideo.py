@@ -15,9 +15,9 @@ class ImportCamerasFromVideo(BaseWidget):
 
 		self._formset = [ ('_video','_step','_button'), '_player','_events']
 
-		self._video.changed = self.__videoChangedEvent
-		self._player.processFrame = self.__processFrame
-		self._step.changed  = self.__framesStepChange
+		self._video.changed_event = self.__videoChangedEvent
+		self._player.process_frame_event = self.__process_frame
+		self._step.changed_event  = self.__framesStepChange
 		self._events.pointerChanged = self.__eventPointerChanged
 		self._changePointer = True
 
@@ -26,7 +26,7 @@ class ImportCamerasFromVideo(BaseWidget):
 			self._player.video_index = self._events.value
 			self._player.refresh()
 
-	def __processFrame(self, frame):
+	def __process_frame(self, frame):
 		self._changePointer = False
 		self._events.value = self._player.video_index
 		self._changePointer = True
@@ -43,4 +43,4 @@ class ImportCamerasFromVideo(BaseWidget):
 ###########################################################################################
 ###########################################################################################
 
-if __name__ == "__main__":	 app.startApp( ImportCamerasFromVideo )
+if __name__ == "__main__":	 app.start_app( ImportCamerasFromVideo )

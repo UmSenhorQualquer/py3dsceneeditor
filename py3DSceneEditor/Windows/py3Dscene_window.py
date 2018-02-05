@@ -1,6 +1,6 @@
 from py3DSceneEditor.Windows.__init__ import *
 
-from pyforms.Controls 	import ControlOpenGL
+from pyforms.controls 	import ControlOpenGL
 
 
 class Py3DSceneWindow(BaseWidget):
@@ -14,7 +14,7 @@ class Py3DSceneWindow(BaseWidget):
 		
 		self._formset = ['_scene']
 
-		self._scene.addPopupMenuOption('Reset zoom and rotation', self._scene.resetZoomAndRotation)
+		self._scene.add_popup_menu_option('Reset zoom and rotation', self._scene.reset_zoom_and_rotation)
 
 	@property
 	def scene(self):
@@ -23,10 +23,15 @@ class Py3DSceneWindow(BaseWidget):
 	def scene(self, value):
 		self._scene.value = value
 
+
+	def repaint(self):
+		super(Py3DSceneWindow,self).repaint()
+		self._scene.repaint()
+
 	
 
 ###########################################################################################
 ###########################################################################################
 ###########################################################################################
 
-if __name__ == "__main__":	 app.startApp( ImportCamerasFromVideo )
+if __name__ == "__main__":	 app.start_app( ImportCamerasFromVideo )

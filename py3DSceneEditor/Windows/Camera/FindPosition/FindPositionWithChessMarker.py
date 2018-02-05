@@ -53,5 +53,5 @@ class FindPositionWithChessMarker(FindPositionWithARMarker):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( FindPositionWithChessMarker )
+if __name__ == "__main__":	 app.start_app( FindPositionWithChessMarker )
 	

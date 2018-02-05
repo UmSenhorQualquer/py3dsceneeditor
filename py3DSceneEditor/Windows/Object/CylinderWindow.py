@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.CylinderObject import CylinderObject
+from py3dengine.objects.CylinderObject import CylinderObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -18,13 +18,13 @@ class CylinderWindow(ObjectWindow, CylinderObject):
 		self._fbControl = ControlText('B', str(self.fB) )
 		self._heightControl = ControlText('Height', str(self.cylinderHeight) )
 
-		self._formset = [ '_objectName','_colorField','_faControl','_fbControl', '_heightControl',' ']
+		self._formset = [ '_parent_obj', '_objectName','_colorField','_faControl','_fbControl', '_heightControl',' ']
 
-		self._faControl.changed = self.__faControlChanged
-		self._fbControl.changed = self.__fbControlChanged
-		self._heightControl.changed = self.__heightControlChanged
+		self._faControl.changed_event = self.__faControlChanged
+		self._fbControl.changed_event = self.__fbControlChanged
+		self._heightControl.changed_event = self.__heightControlChanged
 
-		self.initForm()
+		self.init_form()
 
 	def __faControlChanged(self): 
 		self.fA = eval(self._faControl.value)
@@ -56,5 +56,5 @@ class CylinderWindow(ObjectWindow, CylinderObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( CylinderWindow )
+if __name__ == "__main__":	 app.start_app( CylinderWindow )
 	

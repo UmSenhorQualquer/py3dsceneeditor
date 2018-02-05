@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.WavefrontObject import WavefrontObject
+from py3dengine.objects.WavefrontObject import WavefrontObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -18,19 +18,19 @@ class WavefrontWindow(ObjectWindow, WavefrontObject):
 		self._amplitudeField 	= ControlText('Amplitude', 	str(self.amplitude) )
 		self._reloadBtn 		= ControlButton('Reload')
 		
-		self._formset = [ 
+		self._formset = [  '_parent_obj',
 			'_objectName','_colorField',
 			'_centerOfMassField',
 			'_positionField','_rotationField',
 			'_terrainField', '_reloadBtn',
 			'_resolutionField','_amplitudeField',' ' ]
 
-		self._terrainField.changed = self.__terrainChanged
-		self._resolutionField.changed = self.__resolutionChanged
-		self._amplitudeField.changed = self.__amplitudeChanged
+		self._terrainField.changed_event = self.__terrainChanged
+		self._resolutionField.changed_event = self.__resolutionChanged
+		self._amplitudeField.changed_event = self.__amplitudeChanged
 		self._reloadBtn.value = self.__reloadObj
 
-		self.initForm()
+		self.init_form()
 
 	def __terrainChanged(self): 	self.terrain    = self._terrainField.value
 	def __resolutionChanged(self):	self.resolution = int(self._resolutionField.value)
@@ -48,5 +48,5 @@ class WavefrontWindow(ObjectWindow, WavefrontObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( WavefrontWindow )
+if __name__ == "__main__":	 app.start_app( WavefrontWindow )
 	

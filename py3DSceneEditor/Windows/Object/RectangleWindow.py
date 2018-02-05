@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.RectangleObject 	import RectangleObject
+from py3dengine.objects.RectangleObject 	import RectangleObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -18,14 +18,14 @@ class RectangleWindow(ObjectWindow, RectangleObject):
 		self._p2 = ControlText('Point 2', str(self.point2) )
 		self._p3 = ControlText('Point 3', str(self.point3) )
 
-		self._formset = [ '_objectName','_colorField','_p0','_p1','_p2','_p3', '_refractionField', ' ']
+		self._formset = [ '_parent_obj', '_objectName','_colorField','_p0','_p1','_p2','_p3', '_refractionField', ' ']
 
-		self._p0.changed = self.__point0Changed
-		self._p1.changed = self.__point1Changed
-		self._p2.changed = self.__point2Changed
-		self._p3.changed = self.__point3Changed
+		self._p0.changed_event = self.__point0Changed
+		self._p1.changed_event = self.__point1Changed
+		self._p2.changed_event = self.__point2Changed
+		self._p3.changed_event = self.__point3Changed
 
-		self.initForm()
+		self.init_form()
 
 	def __point0Changed(self): 
 		self.point0 = eval(self._p0.value)
@@ -62,5 +62,5 @@ class RectangleWindow(ObjectWindow, RectangleObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( RectangleWindow )
+if __name__ == "__main__":	 app.start_app( RectangleWindow )
 	

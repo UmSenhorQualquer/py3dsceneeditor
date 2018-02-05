@@ -17,9 +17,9 @@ class SelectCameraRay(BaseWidget):
 
 		self._point = None
 		
-		self.initForm()
+		self.init_form()
 
-		self._player.processFrame = self.__processFrame
+		self._player.process_frame_event = self.__process_frame
 		self._player.onDoubleClick = self.onDoubleClickInVideoWindow
 
 		self.setGeometry(0,0, 500,500)
@@ -28,7 +28,7 @@ class SelectCameraRay(BaseWidget):
 
 
 
-	def __processFrame(self, frame): 
+	def __process_frame(self, frame): 
 		#frame = cv2.undistort(frame, self.cameraMatrix, self.distortion)
 
 		if self._point:
@@ -59,5 +59,5 @@ class SelectCameraRay(BaseWidget):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( SelectCameraRay )
+if __name__ == "__main__":	 app.start_app( SelectCameraRay )
 	

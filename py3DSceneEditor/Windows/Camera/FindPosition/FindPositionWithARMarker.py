@@ -24,15 +24,15 @@ class FindPositionWithARMarker(BaseWidget):
 						,'_player' ] 
 
 		self._findPosition.value = self.findPositionEvent
-		self._player.processFrame = self.__processFrame
-		self._threshold.changed= self.__thresholdChanged
+		self._player.process_frame_event = self.__process_frame
+		self._threshold.changed_event= self.__thresholdChanged
 			
-		self.initForm();
+		self.init_form();
 		self.setGeometry(0,0, 500,500)
 
 	def __thresholdChanged(self): self._player.refresh()
 
-	def __processFrame(self, frame):
+	def __process_frame(self, frame):
 		frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY )
 		binary = cv2.THRESH_BINARY
 		if self._invert.value: binary = cv2.THRESH_BINARY_INV
@@ -41,7 +41,7 @@ class FindPositionWithARMarker(BaseWidget):
 
 	
 	def findPositionEvent(self):
-		thresh = self.__processFrame(self._player.image)
+		thresh = self.__process_frame(self._player.image)
 		gray = cv2.cvtColor(self._player.image, cv2.COLOR_BGR2GRAY )
 		
 		marker_detector = MarkerDetector(
@@ -74,5 +74,5 @@ class FindPositionWithARMarker(BaseWidget):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( CameraFindPositionWithMarker )
+if __name__ == "__main__":	 app.start_app( CameraFindPositionWithMarker )
 	

@@ -4,7 +4,6 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import cv2
 import numpy as np
-from PyQt4 import QtGui
 
 class CalibrateCameraWithMarker(BaseWidget):
 	
@@ -12,39 +11,39 @@ class CalibrateCameraWithMarker(BaseWidget):
 		super(CalibrateCameraWithMarker,self).__init__('Camera calibrator')
 		self._parent = parent
 		
-		self._player = ControlPlayer('Player')
-		self._frames = ControlList('Frames')
-		self._addFrameBtn = ControlButton('Add frame')
-		self._calibrateBtn = ControlButton('Calibrate')
-		self._sizeOfSquare = ControlText('Square size', '0.304')
-		self._patternSize = ControlText('Pattern size', '5,7')
-		self._threshold = ControlSlider('Threshold', 150, 0, 255)
-		self._invert = ControlCheckBox('Invert')
-		self._findmarker = ControlCheckBox('Find marker')
+		self._player 		 = ControlPlayer('Player')
+		self._frames 		 = ControlList('Frames')
+		self._addFrameBtn 	 = ControlButton('Add frame')
+		self._calibrateBtn 	 = ControlButton('Calibrate')
+		self._sizeOfSquare 	 = ControlText('Square size', '0.304')
+		self._patternSize 	 = ControlText('Pattern size', '5,7')
+		self._threshold 	 = ControlSlider('Threshold', 150, 0, 255)
+		self._invert 		 = ControlCheckBox('Invert')
+		self._findmarker 	 = ControlCheckBox('Find marker')
 		self._usecalibration = ControlCheckBox('Play video with calibration values')
-		self._usethresh = ControlCheckBox('Use threshold')
+		self._usethresh      = ControlCheckBox('Use threshold')
 
-		self._formset = [ '_player','=',
-				[
-					('_usethresh','_threshold','_invert','_findmarker'),
-					('_sizeOfSquare','_patternSize','_usecalibration',
-					'_addFrameBtn','_calibrateBtn'),
-					'_frames'] 
-			]
+		self._formset = [ 
+			'_player','=',
+			[
+				('_usethresh','_threshold','_invert','_findmarker'),
+				('_sizeOfSquare','_patternSize','_usecalibration',
+				'_addFrameBtn','_calibrateBtn'),
+				'_frames'
+			] 
+		]
 
-		self._addFrameBtn.value = self.__addFrameEvent
-		self._calibrateBtn.value = self.__calibrationEvent
-		self._threshold.changed= self.__thresholdChanged
-		self._frames.showGrid = False
-		self._frames.showHeader = False
-		self._frames.showRowsNumber = False
-		self._frames.selectEntireRow = True
-		self._usethresh.changed = self.__usethreshChanged
-		self._frames.addPopupMenuOption('Delete', self.__deleteFrame)
-
-		self._player.processFrame = self.__processFrame
+		self._addFrameBtn.value 		= self.__addFrameEvent
+		self._calibrateBtn.value 		= self.__calibrationEvent
+		self._threshold.changed_event	= self.__thresholdChanged
+		self._frames.select_entire_row 	= True
+		self._usethresh.changed_event 	= self.__usethreshChanged
 		
-		self.initForm()
+		self._frames.add_popup_menu_option('Delete', self.__deleteFrame)
+
+		self._player.process_frame_event = self.__process_frame
+		
+		self.init_form()
 		
 		self.setGeometry(0,0, 500,500)
 
@@ -56,7 +55,7 @@ class CalibrateCameraWithMarker(BaseWidget):
 		self._threshold.enabled = self._usethresh.value
 		self._invert.enabled = self._usethresh.value
 
-	def __processFrame(self, frame): 
+	def __process_frame(self, frame): 
 		if self._usecalibration.value:
 			frame = cv2.undistort(frame, self.cameraMatrix, self.distortion)
 
@@ -156,10 +155,9 @@ class CalibrateCameraWithMarker(BaseWidget):
 				self._parent._width.value  = str(camera_matrix[0,2])
 				self._parent._height.value = str(camera_matrix[1,2])
 
-				QtGui.QMessageBox.information(None, 'Complete', 
-					'Calibration is completed. Used %d images' % good_images )
+				self.info('Calibration is completed. Used {0} images'.format(good_images), 'Complete' )
 			else:
-			    QtGui.QMessageBox.critical(None, 'Error', 'No good images found.' )
+				self.alert('No good images found.', 'Error' )
 
 	@property
 	def cameraMatrix(self): return self._parent.cameraMatrix
@@ -177,5 +175,5 @@ class CalibrateCameraWithMarker(BaseWidget):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( CalibrateCameraWithMarker )
+if __name__ == "__main__":	 app.start_app( CalibrateCameraWithMarker )
 	

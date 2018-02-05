@@ -1,26 +1,24 @@
+from pysettings import conf
 import sys, os, numpy as np
-
-sys.path.append("..")
 
 from OpenGL.GL 		import *
 from OpenGL.GLUT 	import *
 from OpenGL.GLU 	import *
-from PyQt4 			import QtGui
+from AnyQt.QtWidgets import QFileDialog
 import pyforms
 from pyforms 			import BaseWidget
-from pyforms.Controls 	import ControlButton
-from pyforms.Controls 	import ControlOpenGL
-from pyforms.Controls 	import ControlSlider
-from pyforms.Controls 	import ControlText
-from pyforms.Controls 	import ControlList
-from pyforms.Controls 	import ControlCombo
-from pyforms.Controls 	import ControlFile
-from pyforms.Controls 	import ControlDockWidget
-from pyforms.Controls 	import ControlToolBox
-from pyforms.Controls 	import ControlPlayer
-from pyforms.Controls 	import ControlTreeView
-from pyforms.Controls 	import ControlTree
-from pyforms.Controls 	import ControlMdiArea
+from pyforms.controls 	import ControlButton
+from pyforms.controls 	import ControlOpenGL
+from pyforms.controls 	import ControlSlider
+from pyforms.controls 	import ControlText
+from pyforms.controls 	import ControlList
+from pyforms.controls 	import ControlCombo
+from pyforms.controls 	import ControlFile
+from pyforms.controls 	import ControlDockWidget
+from pyforms.controls 	import ControlToolBox
+from pyforms.controls 	import ControlPlayer
+from pyforms.controls 	import ControlTree
+from pyforms.controls 	import ControlMdiArea
 
 
 from py3DSceneEditor.Windows.Camera.CameraWindow 	import CameraWindow
@@ -36,11 +34,14 @@ from py3DSceneEditor.Windows.Object.PlaneWindow 	import PlaneWindow
 from py3DSceneEditor.Windows.Object.WavefrontWindow import WavefrontWindow
 from py3DSceneEditor.Windows.Object.TreeSceneModel 	import TreeItem, TreeModel
 
-from py3DEngine.scenes.GLScene import GLScene
+from py3dengine.scenes.GLScene import GLScene
 from py3DSceneEditor.Windows.py3Dscene_window import Py3DSceneWindow
 
-from py3DEngine.utils.WavefrontOBJFormat.WavefrontOBJReader import WavefrontOBJReader
-from py3DEngine.utils.WavefrontOBJFormat.WavefrontOBJWriter import WavefrontOBJWriter
+from py3dengine.utils.WavefrontOBJFormat.WavefrontOBJReader import WavefrontOBJReader
+from py3dengine.utils.WavefrontOBJFormat.WavefrontOBJWriter import WavefrontOBJWriter
+
+
+
 
 
 class SceneCalibrator(BaseWidget, GLScene):
@@ -54,18 +55,15 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self._axis = None
 
 		self._scenewindow 	= Py3DSceneWindow()
-
-		self._tree 			= ControlTree('Objects')
 		
-
 		self._cameras 		= ControlList('Cameras')
-		self._addCameraBtn 	= ControlButton("Add camera")
-		self._objectsTypes 	= ControlCombo("Type")
-		self._addObjectBtn 	= ControlButton("Add object")
+		self._add_cam_btn 	= ControlButton("Add camera")
+		self._objs_types 	= ControlCombo("Type")
+		self._add_obj_btn 	= ControlButton("Add object")
 		self._toolbox 		= ControlToolBox('ToolBox')
 		self._tooldock		= ControlDockWidget('Scene', 		  side=ControlDockWidget.SIDE_RIGHT, order=0)
 		self._detaildock	= ControlDockWidget('Object details', side=ControlDockWidget.SIDE_RIGHT, order=1)
-		self._objectsTree	= ControlTreeView('Objects')
+		self._objtree		= ControlTree('Objects')
 		self._mdi 			= ControlMdiArea()
 		
 		self._formset = [ '_mdi' ]
@@ -73,50 +71,42 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self._mdi += self._scenewindow
 
 		self._tooldock.value = self._toolbox
-		self._tooldock.value = self._tree
+
 		self.docks = {'right': [self._tooldock, self._detaildock] }
 
 		#Events
-		self._addCameraBtn.value 	= self.__addCamera
-		self._addObjectBtn.value 	= self.__addObject
+		self._add_cam_btn.value 	= self.__add_camera
+		self._add_obj_btn.value 	= self.__add_object
 		
 		self._scenewindow.scene		= self
 		self._toolbox.value 		= [ 
-			('Cameras',[self._addCameraBtn, self._cameras]						  ),
-			('Objects',[self._objectsTypes, self._addObjectBtn, self._objectsTree]),
+			('Cameras',[self._add_cam_btn, self._cameras]						  ),
+			('Objects',[self._objs_types, self._add_obj_btn, self._objtree]),
 		]
 
-		self._objectsTypes.addItem('Triangle', 	0)
-		self._objectsTypes.addItem('Marker', 	1)
-		self._objectsTypes.addItem('Rectangle', 2)
-		self._objectsTypes.addItem('Ellipsoid', 3)
-		self._objectsTypes.addItem('Ellipse', 	4)
-		self._objectsTypes.addItem('Cylinder',  5)
-		self._objectsTypes.addItem('Plane',  	6)
-		self._objectsTypes.addItem('Mesh',  	7)
-		self._objectsTypes.addItem('Point',  	8)
+		self._objs_types.add_item('Triangle', 	0)
+		self._objs_types.add_item('Marker', 	1)
+		self._objs_types.add_item('Rectangle', 2)
+		self._objs_types.add_item('Ellipsoid', 3)
+		self._objs_types.add_item('Ellipse', 	4)
+		self._objs_types.add_item('Cylinder',  5)
+		self._objs_types.add_item('Plane',  	6)
+		self._objs_types.add_item('Mesh',  		7)
+		self._objs_types.add_item('Point',  	8)
 
 
-		self.initForm()
+		self.init_form()
 		
-		self._cameras.showGrid 			= False
-		self._cameras.showHeader 		= False
-		self._cameras.showRowsNumber 	= False
-		self._cameras.selectEntireRow 	= True
-		self._cameras.editable 			= False
 
-		self._objectsTree.showGrid 			= False
-		self._objectsTree.showHeader 		= False
-		self._objectsTree.showRowsNumber 	= False
-		self._objectsTree.selectEntireRow 	= True
-		self._objectsTree.editable		 	= False
+		self._cameras.select_entire_row = True
+		self._cameras.readonly 			= True
 
+		self._objtree.show_header 	= False
 		
-		self._cameras.itemSelectionChanged 		= self.__cameraSelectionChangedEvent
-		self._objectsTree.itemSelectionChanged 	= self.__objectSelectionChangedEvent
-		self._objectsTree.itemChangedEvent 		= self.__objectChangedEvent
-		self._cameras.addPopupMenuOption('Delete', self.__deleteCamera)
-		self._objectsTree.addPopupMenuOption('Delete', self.__deleteObject)
+		self._cameras.item_selection_changed_event 	= self.__camera_selection_changed_evt
+		self._objtree.item_selection_changed_event 	= self.__object_selection_changed_event
+		self._cameras.add_popup_menu_option('Delete', self.__delete_camera)
+		self._objtree.add_popup_menu_option('Delete', self.__delete_object)
 
 		self.mainmenu = [
 				{
@@ -127,36 +117,35 @@ class SceneCalibrator(BaseWidget, GLScene):
 				}
 			]
 
-		cameras_node = self._tree.createChild('Cameras')
-		objects_node = self._tree.createChild('Objects')
 
+		self.__loadScene('py-3d-engine/examples/DolphinScene.obj')
 		print("------------ loaded -------------------------")
 
 	########################################################################
 	############################### CAMERA #################################
 	########################################################################
 
-	def __cameraSelectionChangedEvent(self): 
+	def __camera_selection_changed_evt(self): 
 		self._scenewindow.repaint()
-		row = self._cameras.mouseSelectedRowIndex
+		row = self._cameras.selected_row_index
 		if row!=None:
-			cell = self._cameras.getCell(0, row)
+			cell = self._cameras.get_cell(0, row)
 			self._detaildock.value = cell._window
 
-	def __addCamera(self): 
+	def __add_camera(self): 
 		self._cameras += ['New camera']
-		row = self._cameras.getCell(0, self._cameras.count-1)
+		row = self._cameras.get_cell(0, self._cameras.rows_count-1)
 		row._window = CameraWindow(self)
 		row._window.parentRowControl = row
 
-	def __deleteCamera(self): self._cameras -= -1
+	def __delete_camera(self): self._cameras -= -1
 
 	########################################################################
 	############################### CAMERA #################################
 	########################################################################
 
-	def __addObject(self):
-		objtype = self._objectsTypes.value
+	def __add_object(self):
+		objtype = self._objs_types.value
 
 		if objtype==0: obj = TriangleWindow(self)
 		if objtype==1: obj = MarkerWindow(self)
@@ -169,64 +158,46 @@ class SceneCalibrator(BaseWidget, GLScene):
 		if objtype==8: obj = PointWindow(self)
 
 		self.objects.append( obj )
-		self.__updateObjectsTree()
+		self.update_objects_tree()
 
-	def __deleteObject(self):
-		item = self._objectsTree.selectedItem
+	def __delete_object(self):
+		item = self._objtree.selected_item
 		if item!=None:
 			obj = self.getObject(item.text())
 			self._objects.remove(obj)
-			self._objectsTree -= -1
+			self._objtree -= -1
 			self.calculateCollisions()
 
-	def __updateObjectsTree(self, objects=None, treeItemNode=None):
-		root = False
-		print("__updateObjectsTree")
-		if treeItemNode==None: 	
-			treeItemNode = self._objectsTree.model().invisibleRootItem()
-			treeItemNode.removeRows(0, treeItemNode.rowCount() )
-			root = True
+	def update_objects_tree(self, objects=None, tree_node=None):
 
-		if objects==None: objects = self._objects
+		if tree_node==None: 
+			print('clear objects tree')
+			print(self._objects)
+			self._objtree.clear()
+		if objects==None: 	objects = self._objects
 
 		for obj in objects:
-			if not(root and obj.parentObj!=None):
-				item = TreeItem(obj)
-				treeItemNode.appendRow( item )
+			if not(tree_node==None and obj.parentObj!=None):
+				item = self._objtree.create_child(obj.name, tree_node)
+				self.update_objects_tree(obj.childs, item)
 
-				self.__updateObjectsTree( obj._childs, item)
+		ObjectWindow.update_allobjects_list()
 
 
-	def __objectSelectionChangedEvent(self): 
-		item = self._objectsTree.selectedItem
+	def __object_selection_changed_event(self): 
+		item = self._objtree.selected_item
 		if item!=None:
-			win = self.getObject( str(item.text()) )
+			win = self.getObject( str(item.text(0)) )
 			if win!=None: 
 				self._detaildock.value = win
 
-	
-	def __objectChangedEvent(self, item):
-		self.recursivelySetHierarchyRoot( self._objectsTree.value, item ) 
-
-	def recursivelySetHierarchyRoot(self, root, item):
-		if root!=item and root.text()==item.text(): return
-		
-		obj = self.getObject(root.text())
-
-		if obj!=None: obj.cleanChilds()
-
-		for rowIndex in range(root.rowCount()):
-			child = root.child(rowIndex)
-			if obj!=None and ( (item==child and child.text()==item.text()) or child.text()!=item.text() ): 
-				child_obj = self.getObject( child.text() )
-				obj.addChild(child_obj)
-			self.recursivelySetHierarchyRoot( child, item )
 
 	def find_node_by_name(self, name, root=None):
-		if root==None: root = self._objectsTree.value
-		if str(root.text())==name: return root
+		if root==None: root = self._objtree.invisibleRootItem()
+
+		if str(root.text(0))==name: return root
 		
-		for index in range(root.rowCount()):
+		for index in range(root.childCount()):
 			child = root.child(index)
 			res = self.find_node_by_name( name, child )
 			if res: return res
@@ -251,11 +222,11 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 
 	def __importData(self):
-		filename = QtGui.QFileDialog.getOpenFileName(self, "Open file", "", "*.obj")
+		filename, _ = QFileDialog.getOpenFileName(self, "Open file", "", "*.obj")
 		if filename: self.__loadScene(filename)
 
 	def __exportData(self):
-		filename = str(QtGui.QFileDialog.getSaveFileName(self, "Save file", "", "*.obj"))
+		filename, _ = QFileDialog.getSaveFileName(self, "Save file", "", "*.obj")
 		if filename: 
 			if not filename.endswith('.obj'): filename += '.obj'
 			self.__saveScene(filename)
@@ -267,9 +238,10 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 		self.calculateCollisions()
 		
-	def getSceneModelTree(self, findNode=None): return self._objectsTree._model.nodeChildrens(findNode=findNode)
+	def getSceneModelTree(self, findNode=None): return self._objtree._model.nodeChildrens(findNode=findNode)
 
-	def repaint(self): self._scenewindow.repaint()
+	def repaint(self): 
+		self._scenewindow.repaint()
 
 
 
@@ -303,17 +275,16 @@ class SceneCalibrator(BaseWidget, GLScene):
 			#For historical reasons
 			if objtype=='WavefrontObject' or objtype=='TerrainObject': 	obj = WavefrontWindow(self)
 
-			print(o)
 			obj.wavefrontobject = o; self._objects.append(obj)
 
-		self.initHierarchy(value)
+		self.set_hierarchy(value)
 
-		self.__updateObjectsTree()	
+		self.update_objects_tree()	
 
 	@property
 	def cameras(self):
 		try:
-			return [self._cameras.getCell(0,row)._window for row in range(self._cameras.count)]
+			return [self._cameras.get_cell(0,row)._window for row in range(self._cameras.rows_count)]
 		except:
 			print("No cameras yet")
 			return []
@@ -324,7 +295,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		for o in value:
 			if o.getProperty('type')=='Camera': 
 				self._cameras += [ o.name ]
-				row = self._cameras.getCell(0, self._cameras.count-1)
+				row = self._cameras.get_cell(0, self._cameras.rows_count-1)
 				win = CameraWindow(self)
 				win.parentRowControl = row
 				win.wavefrontobject = o
@@ -332,25 +303,25 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 
 	@property
-	def selectedObject(self):
+	def selected_object(self):
 		"""
 		Return the current selected camera
 		"""
-		row = self._cameras.mouseSelectedRowIndex
+		row = self._cameras.selected_row_index
 		if row!=None:
-			cell = self._cameras.getCell(0, row)
+			cell = self._cameras.get_cell(0, row)
 			return cell._window
 		else:
 			return None
 	
-	@selectedObject.setter
-	def selectedObject(self, value): pass
+	@selected_object.setter
+	def selected_object(self, value): pass
 
 
 
 ##################################################################################################################
 ##################################################################################################################
 ##################################################################################################################
-def main(): pyforms.startApp( SceneCalibrator )
+def main(): pyforms.start_app( SceneCalibrator )
 
 if __name__ == "__main__":	main()

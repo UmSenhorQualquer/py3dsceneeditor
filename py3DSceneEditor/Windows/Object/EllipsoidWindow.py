@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.EllipsoidObject import EllipsoidObject
+from py3dengine.objects.EllipsoidObject import EllipsoidObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -18,16 +18,16 @@ class EllipsoidWindow(ObjectWindow, EllipsoidObject):
 		self._fbControl = ControlText('B', str(self.fB) )
 		self._fcControl = ControlText('C', str(self.fC) )
 
-		self._formset = [ '_activeField',
+		self._formset = [ '_parent_obj', '_activeField',
 			'_objectName','_colorField',
 			'_positionField','_rotationField', '_centerOfMassField',
 			'_faControl','_fbControl','_fcControl', ' ']
 
-		self._faControl.changed = self.__faControlChanged
-		self._fbControl.changed = self.__fbControlChanged
-		self._fcControl.changed = self.__fcControlChanged
+		self._faControl.changed_event = self.__faControlChanged
+		self._fbControl.changed_event = self.__fbControlChanged
+		self._fcControl.changed_event = self.__fcControlChanged
 
-		self.initForm()
+		self.init_form()
 
 	def __faControlChanged(self): 
 		self.fA = eval(self._faControl.value)
@@ -52,5 +52,5 @@ class EllipsoidWindow(ObjectWindow, EllipsoidObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( EllipsoidWindow )
+if __name__ == "__main__":	 app.start_app( EllipsoidWindow )
 	

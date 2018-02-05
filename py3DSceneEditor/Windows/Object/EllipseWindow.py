@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.EllipseObject import EllipseObject
+from py3dengine.objects.EllipseObject import EllipseObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -17,12 +17,12 @@ class EllipseWindow(ObjectWindow, EllipseObject):
 		self._faControl = ControlText('A', str(self.fA) )
 		self._fbControl = ControlText('B', str(self.fB) )
 
-		self._formset = [ '_objectName','_colorField','_faControl','_fbControl',' ']
+		self._formset = [ '_parent_obj', '_objectName','_colorField','_faControl','_fbControl',' ']
 
-		self._faControl.changed = self.__faControlChanged
-		self._fbControl.changed = self.__fbControlChanged
+		self._faControl.changed_event = self.__faControlChanged
+		self._fbControl.changed_event = self.__fbControlChanged
 
-		self.initForm()
+		self.init_form()
 
 	def __faControlChanged(self): 
 		self.fA = eval(self._faControl.value)
@@ -48,5 +48,5 @@ class EllipseWindow(ObjectWindow, EllipseObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( EllipseWindow )
+if __name__ == "__main__":	 app.start_app( EllipseWindow )
 	
