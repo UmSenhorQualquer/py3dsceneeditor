@@ -7,6 +7,7 @@ from subprocess import call
 SUBMODULES_FOLDERS = [
     'logging-bootstrap',
     'pysettings',
+    'pyOSC',
     'pyforms',
     'py-3d-engine',
     '.'

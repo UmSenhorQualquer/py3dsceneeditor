@@ -10,3 +10,6 @@
 [submodule "py-3d-engine"]
 	path = py-3d-engine
 	url = https://github.com/UmSenhorQualquer/py3dengine.git
+[submodule "pyOSC"]
+	path = pyOSC
+	url = https://github.com/UmSenhorQualquer/pyOSC.git

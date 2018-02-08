@@ -23,13 +23,6 @@ setup(
 
 
 	package_data={'py3DSceneEditor': ['style.css']},
-
-	install_requires=[
-		"pyforms >= 0.1.3",
-		"pyopengl >= 3.1.0",
-		"numpy >= 1.6.1"
-	],
-
 	entry_points={
 		'console_scripts':['py3DSceneEditorApp=py3DSceneEditor:__main__']
 	}
