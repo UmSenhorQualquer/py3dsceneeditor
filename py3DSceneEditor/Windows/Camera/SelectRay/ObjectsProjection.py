@@ -14,9 +14,9 @@ class ObjectsProjection(BaseWidget):
 		self._player = ControlPlayer('Player')
 		self._formset = ['_player'] 
 		
-		self.initForm()
+		self.init_form()
 
-		self._player.processFrame = self.__processFrame
+		self._player.process_frame_event = self.__process_frame
 
 		self.setGeometry(0,0, 500,500)
 
@@ -24,7 +24,7 @@ class ObjectsProjection(BaseWidget):
 		self._main = parent._parent
 
 
-	def __processFrame(self, frame): 
+	def __process_frame(self, frame): 
 		for obj in self._main.objects:
 			pts = obj.projectIn(self._camera)
 			for p in pts:
@@ -42,5 +42,5 @@ class ObjectsProjection(BaseWidget):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( SelectCameraRay )
+if __name__ == "__main__":	 app.start_app( SelectCameraRay )
 	

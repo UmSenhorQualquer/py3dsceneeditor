@@ -1,7 +1,7 @@
 from py3DSceneEditor.Windows.Camera.__init__ import *
 from numpy import *
-from py3DEngine.cameras.Camera 					import Camera
-from py3DEngine.cameras.Ray 						import Ray
+from py3dengine.cameras.Camera 					import Camera
+from py3dengine.cameras.Ray 						import Ray
 from py3DSceneEditor.Windows.Camera.FindPosition.FindPositionWithARMarker 		import FindPositionWithARMarker
 from py3DSceneEditor.Windows.Camera.FindPosition.FindPositionWithChessMarker 	import FindPositionWithChessMarker
 from py3DSceneEditor.Windows.Camera.FindPosition.FindPositionManually 			import FindPositionManually
@@ -12,8 +12,7 @@ from py3DSceneEditor.Windows.Camera.Calibrate.ManualCalibration 			import Manual
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-import math
-from PyQt4 import QtGui
+import math, numpy as np
 
 class CameraWindow(BaseWidget, Camera):
 	
@@ -22,6 +21,9 @@ class CameraWindow(BaseWidget, Camera):
 		Camera.__init__(self)
 		self._parent = parent
 		self._updating = False
+
+		#self.setMinimumHeight(700)
+		self.setMinimumWidth(400)
 
 		self._calibratorWindow 				= CalibrateCameraWithMarker(self)
 		self._manualCalibrationWindow 		= ManualCalibration(self)
@@ -61,11 +63,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._raysList 		= ControlList('Rays')
 		self._addNewRay 	= ControlButton('New ray')
 
-		self._raysList.showGrid 		= False
-		self._raysList.showHeader 		= False
-		self._raysList.showRowsNumber 	= False
-		self._raysList.selectEntireRow 	= True
-		#self._raysList.editable 			= False
+		self._raysList.select_entire_row = True
 
 		self._toolbox.value = [ 
 			('Camera matrix and distortion',
@@ -96,42 +94,42 @@ class CameraWindow(BaseWidget, Camera):
 			'_videofile',
 			'_toolbox',' ' ]
 
-		self.initForm()
+		self.init_form()
 
-		self._raysList.addPopupMenuOption('Select ray in the image', self.__showSelectCameraRay)
-		self._raysList.addPopupMenuOption('Get intersection', self.__showIntersection)
-		self._raysList.addPopupMenuOption('-')
-		self._raysList.addPopupMenuOption('Calc distance between points', self.__showCalcDistance)
-		self._raysList.addPopupMenuOption('-')
-		self._raysList.addPopupMenuOption('Remove', self.__removeRay)
+		self._raysList.add_popup_menu_option('Select ray in the image', self.__showSelectCameraRay)
+		self._raysList.add_popup_menu_option('Get intersection', self.__showIntersection)
+		self._raysList.add_popup_menu_option('-')
+		self._raysList.add_popup_menu_option('Calc distance between points', self.__showCalcDistance)
+		self._raysList.add_popup_menu_option('-')
+		self._raysList.add_popup_menu_option('Remove', self.__removeRay)
 
 
-		self._raysList.changed 						= self.__rayChanged				
+		self._raysList.changed_event 						= self.__rayChanged				
 		self._videoManualCalibrationBtn.value       = self.__manualCalibrateEvent
 		self._videoCalibrationBtn.value 			= self.__calibrateBtnEvent
 		self._findPosManuallyBtn.value 				= self.__findPositionManualEvent
 		self._findPositionWithArMarkerBtn.value 	= self.__findPositionWithArMarkerEvent
 		self._findPositionWithChessMarkerBtn.value 	= self.__findPositionWithChessMarkerEvent
 		self._showObjectsProjectionBtn.value		= self.__showObjectsProjectionEvent
-		self.layout().setMargin(5)
+		self.set_margin(5)
 
-		self._videofile.changed 	= self.__videofileChanged
-		self._cameraName.changed 	= self.__nameChanged
+		self._videofile.changed_event 	= self.__videofileChanged
+		self._cameraName.changed_event 	= self.__nameChanged
 
-		self._width.changed 		= self.__imagePropWidthChanged
-		self._height.changed 		= self.__imagePropHeightChanged
-		self._fxField.changed 		= self.__imagePropFxChanged
-		self._fyField.changed 		= self.__imagePropFyChanged
-		self._cameraMtx.changed     = self.__cameraMtxChanged
-		self._distortion.changed 	= self.__imagePropDistortionChanged
+		self._width.changed_event 		= self.__imagePropWidthChanged
+		self._height.changed_event 		= self.__imagePropHeightChanged
+		self._fxField.changed_event 		= self.__imagePropFxChanged
+		self._fyField.changed_event 		= self.__imagePropFyChanged
+		self._cameraMtx.changed_event     = self.__cameraMtxChanged
+		self._distortion.changed_event 	= self.__imagePropDistortionChanged
 		
-		self._position.changed 			= self.__cameraPositionChanged
-		self._rotation.changed 			= self.__cameraRotationChanged
+		self._position.changed_event 			= self.__cameraPositionChanged
+		self._rotation.changed_event 			= self.__cameraRotationChanged
 
-		self._displayFocalLength.changed = self.__displayFocalLengthChanged
-		self._displayColor.changed 	= self.__displayColorChanged
-		self._displayFaces.changed 	= self.__displayFacesChanged
-		self._show.changed 			= self.__showChanged
+		self._displayFocalLength.changed_event = self.__displayFocalLengthChanged
+		self._displayColor.changed_event 	= self.__displayColorChanged
+		self._displayFaces.changed_event 	= self.__displayFacesChanged
+		self._show.changed_event 			= self.__showChanged
 
 		self._addNewRay.value = self.__addNewRayEvent
 
@@ -146,8 +144,8 @@ class CameraWindow(BaseWidget, Camera):
 				p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
 				ray = Ray(p0, p1)
 				objs.append( ray )
-			except:
-				print( "error converting ray")
+			except Exception as e:
+				print("error converting ray", str(e))
 		self.rays = objs
 
 	def __rayChanged(self, row=0, col=0):
@@ -174,7 +172,7 @@ class CameraWindow(BaseWidget, Camera):
 			msg  = 'From: ' + str(ray.points[0]) + '\n'
 			msg += 'To: ' 	+ str(ray.points[1]) + '\n'
 			msg += 'Distance: ' + str(ray.length) + '\n'
-			QtGui.QMessageBox.information(None, 'Ray intersection', msg )
+			self.info(msg,'Ray intersection')
 
 	def DistanceBetween(p0, p1):   return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2 + (p0[2] - p1[2])**2)
 
@@ -191,21 +189,21 @@ class CameraWindow(BaseWidget, Camera):
 			p1 = ray2.points[1]
 			dist = math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2 + (p0[2] - p1[2])**2)
 			msg += 'Distance: ' + str(dist) + '\n'
-			QtGui.QMessageBox.information(None, 'Distance between rays end points', msg )
+			self.info(msg, 'Distance between rays end points')
 
 	def __showSelectCameraRay(self):
-		self._selectCameraRayWindow.show()
+		self._parent._mdi += self._selectCameraRayWindow
 
 	def __findPositionManualEvent(self):
 		self._findPositionManuallyWindow.objects = self._parent.objects
-		self._findPositionManuallyWindow.show()
+		self._parent._mdi += self._findPositionManuallyWindow
 
 	def __showObjectsProjectionEvent(self):
-		self._objectsProjectionWindow.show()
+		self._parent._mdi += self._objectsProjectionWindow
 		
-	def __findPositionWithArMarkerEvent(self): self._findPositionWithARMarker.show()
+	def __findPositionWithArMarkerEvent(self): self._parent._mdi += self._findPositionWithARMarker
 
-	def __findPositionWithChessMarkerEvent(self): self._findPositionWithChessMarker.show()
+	def __findPositionWithChessMarkerEvent(self): self._parent._mdi += self._findPositionWithChessMarker
 
 	def __videofileChanged(self): 
 		self._calibratorWindow._player.value 			= self._videofile.value
@@ -213,6 +211,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._findPositionWithChessMarker._player.value = self._videofile.value
 		self._selectCameraRayWindow._player.value 		= self._videofile.value
 		self._objectsProjectionWindow._player.value 	= self._videofile.value
+		self._manualCalibrationWindow._player.value 	= self._videofile.value
 
 
 	def __cameraPositionChanged(self):
@@ -232,7 +231,10 @@ class CameraWindow(BaseWidget, Camera):
 			self._parent.calculateCollisions()
 		except: print("error in CameraWindow in the function __cameraRotationChanged")
 
-	def __displayFocalLengthChanged(self): self.maxFocalLength = float(self._displayFocalLength.value); self._parent.repaint()
+	def __displayFocalLengthChanged(self): 
+		self.maxFocalLength = float(self._displayFocalLength.value);
+		self._parent.repaint()
+	
 	def __displayColorChanged(self): self._color = eval(self._displayColor.value); self._parent.repaint()
 	def __displayFacesChanged(self): self.showFaces = self._displayFaces.value; self._parent.repaint()
 	def __showChanged(self): self._parent.repaint()
@@ -246,13 +248,16 @@ class CameraWindow(BaseWidget, Camera):
 		self.cameraCy = self.cameraHeight / 2.0
 		self._parent.repaint()
 	def __cameraMtxChanged(self):
-		self.cameraMatrix = matrix(eval(self._cameraMtx.value))
-		self._width.value 				= str(self.cameraMatrix[0,2]*2)
-		self._height.value 				= str(self.cameraMatrix[1,2]*2)
-		self._fxField.value 			= str(self.cameraMatrix[0,0])
-		self._fyField.value 			= str(self.cameraMatrix[1,1])
-		self._parent.repaint()
-		print(eval(self._cameraMtx.value))
+		try:
+			self.cameraMatrix 	= matrix( eval(self._cameraMtx.value) )
+			self._width.value 	= str(self.cameraMatrix[0,2]*2)
+			self._height.value 	= str(self.cameraMatrix[1,2]*2)
+			self._fxField.value = str(self.cameraMatrix[0,0])
+			self._fyField.value = str(self.cameraMatrix[1,1])
+			self._parent.repaint()
+		except:
+			pass
+		
 
 	def __imagePropFxChanged(self): self.cameraFx = float(self._fxField.value); self._parent.repaint()
 	def __imagePropFyChanged(self): self.cameraFy = float(self._fyField.value); self._parent.repaint()
@@ -265,11 +270,11 @@ class CameraWindow(BaseWidget, Camera):
 
 	def __manualCalibrateEvent(self):
 		self._manualCalibrationWindow.clear()
-		self._manualCalibrationWindow.show()
+		self._parent._mdi += self._manualCalibrationWindow
 
 	def __calibrateBtnEvent(self):
 		self._calibratorWindow.clear()
-		self._calibratorWindow.show()
+		self._parent._mdi += self._calibratorWindow
 
 	def __nameChanged(self):
 		self.setWindowTitle(self._cameraName.value)
@@ -288,6 +293,8 @@ class CameraWindow(BaseWidget, Camera):
 		if value!=None:
 			self._parentRowControl = value
 			self._cameraName.value = value.text()
+		else:
+			del self._parentRowControl
 		
 	
 	@property
@@ -305,7 +312,7 @@ class CameraWindow(BaseWidget, Camera):
 
 	@property
 	def selectedRay(self):
-		index = self._raysList.mouseSelectedRowIndex
+		index = self._raysList.selected_row_index
 		if index==None: return None
 
 		cell = self._raysList.value[index][0]
@@ -317,7 +324,7 @@ class CameraWindow(BaseWidget, Camera):
 	@selectedRay.setter
 	def selectedRay(self, value):
 		if isinstance(value, tuple): 
-			index = self._raysList.mouseSelectedRowIndex
+			index = self._raysList.selected_row_index
 			self._raysList.setValue(0, index, str(value).replace(')','').replace('(',''))
 			self.__rayChanged()
 
@@ -351,7 +358,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._displayFocalLength.value 	= self.maxFocalLength
 		self._displayColor.value 		= str(','.join(map(str,self.color)))
 		self._displayFaces.value 		= self.showFaces
-		self._cameraMtx.value 			= str(self.cameraMatrix)
+		self._cameraMtx.value 			= np.array2string(self.cameraMatrix, separator=',', suppress_small=True)
 		
 		self.__loadRays()
 		
@@ -384,8 +391,8 @@ class CameraWindow(BaseWidget, Camera):
 		if nrays: nrays = int(nrays)
 		else: nrays = 0
 
-		for i in range(nrays): self._raysList += [value.getProperty('ray_%d' % i)]
-
+		for i in range(nrays):
+			self._raysList += [ str(value.getProperty('ray_%d' % i)) ]
 
 		self.refreshWindowValues()
 		self._updating = True
@@ -394,5 +401,5 @@ class CameraWindow(BaseWidget, Camera):
 ###########################################################################################
 ###########################################################################################
 
-if __name__ == "__main__":	 app.startApp( CameraWindow )
+if __name__ == "__main__":	 app.start_app( CameraWindow )
 	

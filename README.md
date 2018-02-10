@@ -14,7 +14,7 @@ This application is used to construct 3D scenes to be used in the Python 3D Engi
 - sudo apt-get install python-opengl
 - sudo pip install pyosc
 - Install pyforms: github.com/UmSenhorQualquer/pyforms
-- Download the py3DEngine files.
+- Download the py3dengine files.
 - Unzip the file.
 - In the terminal run: python main.py
 
@@ -27,6 +27,6 @@ This application is used to construct 3D scenes to be used in the Python 3D Engi
 - Install OpenCV for python
 - sudo pip install pyosc
 - Install pyforms: github.com/UmSenhorQualquer/pyforms
-- Download the py3DEngine files.
+- Download the py3dengine files.
 - Unzip the file.
 - In the terminal run: python main.py

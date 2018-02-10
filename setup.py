@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('py3DSceneEditor/__init__.py', 'r') as fd:
 	__version__ 	= eval(fd.readline().split('=')[1])
@@ -19,23 +19,10 @@ setup(
 	author_email		=__email__,
 	license 			=__license__,
 
-	packages=[
-		'py3DSceneEditor',
-		'py3DSceneEditor.Windows',
-		'py3DSceneEditor.Windows.Object',
-		'py3DSceneEditor.Windows.Camera',
-		'py3DSceneEditor.Windows.Camera.Calibrate',
-		'py3DSceneEditor.Windows.Camera.FindPosition',
-		'py3DSceneEditor.Windows.Camera.SelectRay',],
+	packages=find_packages(),
+
 
 	package_data={'py3DSceneEditor': ['style.css']},
-
-	install_requires=[
-		"pyforms >= 0.1.3",
-		"pyopengl >= 3.1.0",
-		"numpy >= 1.6.1"
-	],
-
 	entry_points={
 		'console_scripts':['py3DSceneEditorApp=py3DSceneEditor:__main__']
 	}

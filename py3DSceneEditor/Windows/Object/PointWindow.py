@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.PointObject import PointObject
+from py3dengine.objects.PointObject import PointObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -15,15 +15,18 @@ class PointWindow(ObjectWindow, PointObject):
 
 		self._p0 = ControlText('Point', str(self.point) )
 
-		self._formset = [ '_objectName','_colorField','_p0',' ']
+		self._formset = [ '_parent_obj', '_objectName','_colorField','_p0',' ']
 
-		self._p0.changed = self.__point0Changed
+		self._p0.changed_event = self.__point0Changed
 		
-		self.initForm()
+		self.init_form()
 
 	def __point0Changed(self): 
-		self.point = eval(self._p0.value)
-		self._parent.repaint()
+		try:
+			self.point = eval(self._p0.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	@property
 	def wavefrontobject(self): return super(PointWindow, self).wavefrontobject
@@ -39,5 +42,5 @@ class PointWindow(ObjectWindow, PointObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( PointWindow )
+if __name__ == "__main__":	 app.start_app( PointWindow )
 	

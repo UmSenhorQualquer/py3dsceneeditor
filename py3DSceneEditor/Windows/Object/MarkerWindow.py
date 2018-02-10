@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.MarkerObject 	import MarkerObject
+from py3dengine.objects.MarkerObject 	import MarkerObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -19,35 +19,50 @@ class MarkerWindow(ObjectWindow, MarkerObject):
 		self._p3 = ControlText('Point 3', str(self.point3) )
 		self._p4 = ControlText('Point 4', str(self.point4) )
 
-		self._formset = [ '_objectName','_colorField','_p0','_p1','_p2','_p3','_p4',' ']
+		self._formset = [ '_parent_obj', '_objectName','_colorField','_p0','_p1','_p2','_p3','_p4',' ']
 
-		self._p0.changed = self.__point0Changed
-		self._p1.changed = self.__point1Changed
-		self._p2.changed = self.__point2Changed
-		self._p3.changed = self.__point3Changed
-		self._p4.changed = self.__point4Changed
+		self._p0.changed_event = self.__point0Changed
+		self._p1.changed_event = self.__point1Changed
+		self._p2.changed_event = self.__point2Changed
+		self._p3.changed_event = self.__point3Changed
+		self._p4.changed_event = self.__point4Changed
 
-		self.initForm()
+		self.init_form()
 
 	def __point0Changed(self): 
-		self.point0 = eval(self._p0.value)
-		self._parent.repaint()
+		try:
+			self.point0 = eval(self._p0.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point1Changed(self): 
-		self.point1 = eval(self._p1.value)
-		self._parent.repaint()
+		try:
+			self.point1 = eval(self._p1.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point2Changed(self): 
-		self.point2 = eval(self._p2.value)
-		self._parent.repaint()
+		try:
+			self.point2 = eval(self._p2.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __point3Changed(self): 
-		self.point3 = eval(self._p3.value)
-		self._parent.repaint()
+		try:
+			self.point3 = eval(self._p3.value)
+			self._parent.repaint()
+		except:
+			pass
 
-	def __point4Changed(self): 
-		self.point4 = eval(self._p4.value)
-		self._parent.repaint()
+	def __point4Changed(self):
+		try:
+			self.point4 = eval(self._p4.value)
+			self._parent.repaint()
+		except:
+			pass
 
 
 	@property
@@ -68,5 +83,5 @@ class MarkerWindow(ObjectWindow, MarkerObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( TriangleWindow )
+if __name__ == "__main__":	 app.start_app( TriangleWindow )
 	

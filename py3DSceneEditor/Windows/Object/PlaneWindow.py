@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3DEngine.objects.PlaneObject import PlaneObject
+from py3dengine.objects.PlaneObject import PlaneObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -17,17 +17,17 @@ class PlaneWindow(ObjectWindow, PlaneObject):
 		self._width = ControlText('Width', str(self.objwidth) )
 		self._height = ControlText('Height', str(self.objheight) )
 
-		self._formset = [ '_activeField',
+		self._formset = [ '_parent_obj', '_activeField',
 			'_objectName','_colorField',
 			'_centerOfMassField',
 			'_positionField','_rotationField',
 			'_width','_height','_maskField', '_refractionField',' ']
 
-		self._width.changed = self.__widthChanged
-		self._maskField.changed = self.__maskChanged
-		self._height.changed = self.__heightChanged
+		self._width.changed_event = self.__widthChanged
+		self._maskField.changed_event = self.__maskChanged
+		self._height.changed_event = self.__heightChanged
 
-		self.initForm()
+		self.init_form()
 
 	def __maskChanged(self): 
 		if self._maskField.value!='':
@@ -37,12 +37,18 @@ class PlaneWindow(ObjectWindow, PlaneObject):
 		self._parent.repaint()
 
 	def __widthChanged(self): 
-		self.objwidth = eval(self._width.value)
-		self._parent.repaint()
+		try:
+			self.objwidth = eval(self._width.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def __heightChanged(self): 
-		self.objheight = eval(self._height.value)
-		self._parent.repaint()
+		try:
+			self.objheight = eval(self._height.value)
+			self._parent.repaint()
+		except:
+			pass
 
 	def afterLoadSceneObject(self):
 		super(PlaneWindow, self).afterLoadSceneObject()
@@ -70,5 +76,5 @@ class PlaneWindow(ObjectWindow, PlaneObject):
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.startApp( PlaneWindow )
+if __name__ == "__main__":	 app.start_app( PlaneWindow )
 	
