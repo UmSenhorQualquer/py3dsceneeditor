@@ -9,7 +9,7 @@ __status__      = "Development"
 import loggingbootstrap; 
 from   importlib.util import find_spec
 
-from pysettings import conf; conf += 'py3DSceneEditor.settings'
+from confapp import conf; conf += 'py3DSceneEditor.settings'
 
 ####################################################
 ## Load the user settings in case the file exists ##

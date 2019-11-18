@@ -1,1 +1,4 @@
 *.pyc
+.idea/
+
+Python_3D_scene_editor.egg-info/

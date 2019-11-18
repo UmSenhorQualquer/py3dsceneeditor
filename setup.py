@@ -20,7 +20,9 @@ setup(
 	license 			=__license__,
 
 	packages=find_packages(),
-
+	install_requires=[
+		"pyforms-gui",
+	],
 
 	package_data={'py3DSceneEditor': ['style.css']},
 	entry_points={

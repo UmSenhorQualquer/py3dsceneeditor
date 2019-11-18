@@ -1,22 +1,14 @@
-from pysettings import conf
-import sys, os, numpy as np
+from confapp import conf
+import numpy as np
 
-from OpenGL.GL 		import *
-from OpenGL.GLUT 	import *
-from OpenGL.GLU 	import *
 from AnyQt.QtWidgets import QFileDialog
 import pyforms
-from pyforms 			import BaseWidget
+from pyforms.basewidget import BaseWidget
 from pyforms.controls 	import ControlButton
-from pyforms.controls 	import ControlOpenGL
-from pyforms.controls 	import ControlSlider
-from pyforms.controls 	import ControlText
 from pyforms.controls 	import ControlList
 from pyforms.controls 	import ControlCombo
-from pyforms.controls 	import ControlFile
 from pyforms.controls 	import ControlDockWidget
 from pyforms.controls 	import ControlToolBox
-from pyforms.controls 	import ControlPlayer
 from pyforms.controls 	import ControlTree
 from pyforms.controls 	import ControlMdiArea
 
@@ -32,7 +24,6 @@ from py3DSceneEditor.Windows.Object.EllipseWindow 	import EllipseWindow
 from py3DSceneEditor.Windows.Object.CylinderWindow 	import CylinderWindow
 from py3DSceneEditor.Windows.Object.PlaneWindow 	import PlaneWindow
 from py3DSceneEditor.Windows.Object.WavefrontWindow import WavefrontWindow
-from py3DSceneEditor.Windows.Object.TreeSceneModel 	import TreeItem, TreeModel
 
 from py3dengine.scenes.GLScene import GLScene
 from py3DSceneEditor.Windows.py3Dscene_window import Py3DSceneWindow
