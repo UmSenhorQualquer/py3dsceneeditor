@@ -1,6 +1,3 @@
-[submodule "logging-bootstrap"]
-	path = logging-bootstrap
-	url = https://UmSenhorQualquer@bitbucket.org/fchampalimaud/logging-bootstrap.git
 [submodule "py-3d-engine"]
 	path = py-3d-engine
 	url = https://github.com/UmSenhorQualquer/py3dengine.git

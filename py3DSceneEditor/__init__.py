@@ -6,7 +6,6 @@ __maintainer__  = "Ricardo Ribeiro"
 __email__       = "ricardojvr@gmail.com"
 __status__      = "Development"
 
-import loggingbootstrap; 
 from   importlib.util import find_spec
 
 from confapp import conf; conf += 'py3DSceneEditor.settings'
@@ -28,6 +27,3 @@ if not pyforms_spec: exit("Could not load pyforms! Is it installed?")
 
 
 print('LEVEL', conf.PYFORMS_LOG_HANDLER_CONSOLE_LEVEL)
-
-loggingbootstrap.create_double_logger("py3DSceneEditor", conf.PY3DEDITOR_LOG_HANDLER_CONSOLE_LEVEL, conf.PY3DEDITOR_LOG_FILENAME , conf.PY3DEDITOR_LOG_HANDLER_FILE_LEVEL)
-loggingbootstrap.create_double_logger("pyforms", 		 conf.PYFORMS_LOG_HANDLER_CONSOLE_LEVEL,    conf.PYFORMS_LOG_FILENAME,     conf.PYFORMS_LOG_HANDLER_FILE_LEVEL)
