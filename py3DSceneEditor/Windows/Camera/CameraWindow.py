@@ -22,7 +22,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._parent = parent
 		self._updating = False
 
-		#self.setMinimumHeight(700)
+		self.setMinimumHeight(500)
 		self.setMinimumWidth(400)
 
 		self._calibratorWindow 				= CalibrateCameraWithMarker(self)
@@ -235,16 +235,28 @@ class CameraWindow(BaseWidget, Camera):
 		self.maxFocalLength = float(self._displayFocalLength.value);
 		self._parent.repaint()
 	
-	def __displayColorChanged(self): self._color = eval(self._displayColor.value); self._parent.repaint()
+	def __displayColorChanged(self):
+		try:
+			self._color = eval(self._displayColor.value);
+			self._parent.repaint()
+		except:
+			pass
+
 	def __displayFacesChanged(self): self.showFaces = self._displayFaces.value; self._parent.repaint()
 	def __showChanged(self): self._parent.repaint()
 
-	def __imagePropWidthChanged(self): 
-		self.cameraWidth = float(self._width.value)
+	def __imagePropWidthChanged(self):
+		try:
+			self.cameraWidth = float(self._width.value)
+		except:
+			self.cameraWidth = 0
 		self.cameraCx = self.cameraWidth / 2.0
 		self._parent.repaint()
-	def __imagePropHeightChanged(self): 
-		self.cameraHeight = float(self._height.value)
+	def __imagePropHeightChanged(self):
+		try:
+			self.cameraHeight = float(self._height.value)
+		except:
+			self.cameraHeight = 0
 		self.cameraCy = self.cameraHeight / 2.0
 		self._parent.repaint()
 	def __cameraMtxChanged(self):
@@ -259,14 +271,29 @@ class CameraWindow(BaseWidget, Camera):
 			pass
 		
 
-	def __imagePropFxChanged(self): self.cameraFx = float(self._fxField.value); self._parent.repaint()
-	def __imagePropFyChanged(self): self.cameraFy = float(self._fyField.value); self._parent.repaint()
-	def __imagePropDistortionChanged(self): 
-		self.cameraDistortion = float32( list(eval(self._distortion.value)) ); self._parent.repaint()
-		self._calibratorWindow.distortion 			= self.cameraDistortion
-		self._findPositionWithARMarker.distortion 	= self.cameraDistortion
-		self._findPositionWithChessMarker.distortion = self.cameraDistortion
-		self._selectCameraRayWindow._player.refresh()
+	def __imagePropFxChanged(self):
+		try:
+			self.cameraFx = float(self._fxField.value);
+			self._parent.repaint()
+		except:
+			pass
+
+	def __imagePropFyChanged(self):
+		try:
+			self.cameraFy = float(self._fyField.value);
+			self._parent.repaint()
+		except:
+			pass
+		
+	def __imagePropDistortionChanged(self):
+		try:
+			self.cameraDistortion = float32( list(eval(self._distortion.value)) ); self._parent.repaint()
+			self._calibratorWindow.distortion 			= self.cameraDistortion
+			self._findPositionWithARMarker.distortion 	= self.cameraDistortion
+			self._findPositionWithChessMarker.distortion = self.cameraDistortion
+			self._selectCameraRayWindow._player.refresh()
+		except:
+			pass
 
 	def __manualCalibrateEvent(self):
 		self._manualCalibrationWindow.clear()
@@ -304,10 +331,13 @@ class CameraWindow(BaseWidget, Camera):
 		res = []
 		for index in indexes:
 			cell = self._raysList.value[index][0]
-			u,v = eval(cell)
-			p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
-			ray = Ray(p0, p1)
-			res.append(ray)
+			try:
+				u,v = eval(cell)
+				p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
+				ray = Ray(p0, p1)
+				res.append(ray)
+			except:
+				pass
 		return res
 
 	@property
@@ -316,10 +346,13 @@ class CameraWindow(BaseWidget, Camera):
 		if index==None: return None
 
 		cell = self._raysList.value[index][0]
-		u,v = eval(cell)
-		p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
-		ray = Ray(p0, p1)
-		return ray
+		try:
+			u,v = eval(cell)
+			p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
+			ray = Ray(p0, p1)
+			return ray
+		except:
+			pass
 
 	@selectedRay.setter
 	def selectedRay(self, value):
