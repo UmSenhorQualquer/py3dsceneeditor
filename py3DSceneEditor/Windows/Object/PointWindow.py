@@ -3,6 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
+import numpy as np
 from py3dengine.objects.PointObject import PointObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
@@ -13,7 +14,9 @@ class PointWindow(ObjectWindow, PointObject):
 		ObjectWindow.__init__(self, parent)
 		PointObject.__init__(self)
 
-		self._p0 = ControlText('Point', str(self.point) )
+		self._p0 = ControlList('Point', default=[list(self.point)],
+							   horizontal_headers=['X', 'Y', 'Z'],
+							   resizecolumns=False, height=85)
 
 		self._formset = [ '_parent_obj', '_objectName','_colorField','_p0',' ']
 
@@ -23,7 +26,7 @@ class PointWindow(ObjectWindow, PointObject):
 
 	def __point0Changed(self): 
 		try:
-			self.point = eval(self._p0.value)
+			self.point = np.array(self._p0.value[0], dtype=np.float)
 			self._parent.repaint()
 		except:
 			pass
@@ -35,8 +38,8 @@ class PointWindow(ObjectWindow, PointObject):
 	def wavefrontobject(self, value):
 		PointObject.wavefrontobject.fset(self, value)
 		self._objectName.value = self.name
-		self._colorField.value = str(self.color)
-		self._p0.value = str(self.point)
+		self._colorField.value = [self.color]
+		self._p0.value = [self.point]
 	
 ##################################################################################################################
 ##################################################################################################################

@@ -56,7 +56,7 @@ class CylinderWindow(ObjectWindow, CylinderObject):
 	def wavefrontobject(self, value):
 		CylinderObject.wavefrontobject.fset(self, value)
 		self._objectName.value = self.name
-		self._colorField.value = str(self.color)
+		self._colorField.value = [self.color]
 		self._faControl.value = str(self.fA)
 		self._fbControl.value = str(self.fB)
 		self._heightControl.value = str(self.cylinderHeight)

@@ -4,3 +4,6 @@
 [submodule "pyOSC"]
 	path = pyOSC
 	url = https://github.com/UmSenhorQualquer/pyOSC.git
+[submodule "pyforms-gui"]
+	path = pyforms-gui
+	url = https://github.com/UmSenhorQualquer/pyforms-gui.git
