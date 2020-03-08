@@ -9,29 +9,31 @@ from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
 class RectangleWindow(ObjectWindow, RectangleObject):
-	
+
+	FORMSET = [ '_parent_obj', '_objectName','_colorField','_p0','_p1','_p2','_p3', '_refractionField', ' ']
+
 	def __init__(self, parent=None):
 		ObjectWindow.__init__(self, parent)
 		RectangleObject.__init__(self)
 
 
-		self._p0 =  ControlList('Point 0', default=[[self.point0]],
+		self._p0 =  ControlList('Point 0', default=[list(self.point0)],
 					   horizontal_headers=['X', 'Y', 'Z'],
 					   resizecolumns=False, height=85)
 
-		self._p1 = ControlList('Point 1', default=[[self.point1]],
+		self._p1 = ControlList('Point 1', default=[list(self.point1)],
 							   horizontal_headers=['X', 'Y', 'Z'],
 							   resizecolumns=False, height=85)
 
-		self._p2 = ControlList('Point 2', default=[[self.point2]],
+		self._p2 = ControlList('Point 2', default=[list(self.point2)],
 							   horizontal_headers=['X', 'Y', 'Z'],
 							   resizecolumns=False, height=85)
 
-		self._p3 = ControlList('Point 3', default=[[self.point3]],
+		self._p3 = ControlList('Point 3', default=[list(self.point3)],
 							   horizontal_headers=['X', 'Y', 'Z'],
 							   resizecolumns=False, height=85)
 
-		self._formset = [ '_parent_obj', '_objectName','_colorField','_p0','_p1','_p2','_p3', '_refractionField', ' ']
+		self.formset = self.FORMSET
 
 		self._p0.changed_event = self.__point0Changed
 		self._p1.changed_event = self.__point1Changed

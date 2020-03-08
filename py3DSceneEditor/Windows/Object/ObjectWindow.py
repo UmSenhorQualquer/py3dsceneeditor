@@ -82,7 +82,7 @@ class ObjectWindow(BaseWidget):
 
 
 	def updateMesh(self): 
-		super(ObjectWindow, self).updateMesh()
+		super().updateMesh()
 		if hasattr(self, '_parent') and self._parent is not None:
 			self._parent.calculateCollisions()
 

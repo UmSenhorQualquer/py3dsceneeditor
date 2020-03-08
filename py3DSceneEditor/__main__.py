@@ -15,6 +15,7 @@ from pyforms.controls 	import ControlMdiArea
 
 from py3DSceneEditor.Windows.Camera.CameraWindow 	import CameraWindow
 from py3DSceneEditor.Windows.Object.ObjectWindow 	import ObjectWindow
+from py3DSceneEditor.Windows.Object.RectangularLightWindow import RectangularLightWindow
 from py3DSceneEditor.Windows.Object.TriangleWindow 	import TriangleWindow
 from py3DSceneEditor.Windows.Object.PointWindow 	import PointWindow
 from py3DSceneEditor.Windows.Object.RectangleWindow import RectangleWindow
@@ -24,6 +25,8 @@ from py3DSceneEditor.Windows.Object.EllipseWindow 	import EllipseWindow
 from py3DSceneEditor.Windows.Object.CylinderWindow 	import CylinderWindow
 from py3DSceneEditor.Windows.Object.PlaneWindow 	import PlaneWindow
 from py3DSceneEditor.Windows.Object.WavefrontWindow import WavefrontWindow
+from py3DSceneEditor.Windows.Object.CircleWindow    import CircleWindow
+from py3DSceneEditor.Windows.Object.CircularLightWindow import CircularLightWindow
 
 from py3dengine.scenes.GLScene import GLScene
 from py3DSceneEditor.Windows.py3Dscene_window import Py3DSceneWindow
@@ -47,15 +50,15 @@ class SceneCalibrator(BaseWidget, GLScene):
 
 		self._scenewindow 	= Py3DSceneWindow()
 		
-		self._cameras 		= ControlList('Cameras')
-		self._add_cam_btn 	= ControlButton("Add camera")
-		self._objs_types 	= ControlCombo("Type")
-		self._add_obj_btn 	= ControlButton("Add object")
-		self._toolbox 		= ControlToolBox('ToolBox')
-		self._tooldock		= ControlDockWidget('Scene', 		  side=ControlDockWidget.SIDE_RIGHT, order=0)
-		self._detaildock	= ControlDockWidget('Object details', side=ControlDockWidget.SIDE_RIGHT, order=1)
-		self._objtree		= ControlTree('Objects')
-		self._mdi 			= ControlMdiArea()
+		self._cameras 	  = ControlList('Cameras')
+		self._add_cam_btn = ControlButton("Add camera")
+		self._objs_types  = ControlCombo("Type")
+		self._add_obj_btn = ControlButton("Add object")
+		self._toolbox 	  = ControlToolBox('ToolBox')
+		self._tooldock	  = ControlDockWidget('Scene', 		  side=ControlDockWidget.SIDE_LEFT, order=0)
+		self._detaildock  = ControlDockWidget('Object details', side=ControlDockWidget.SIDE_RIGHT, order=1)
+		self._objtree	  = ControlTree('Objects')
+		self._mdi 		  = ControlMdiArea()
 		
 		self._formset = [ '_mdi' ]
 
@@ -84,6 +87,9 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self._objs_types.add_item('Plane',  	6)
 		self._objs_types.add_item('Mesh',  		7)
 		self._objs_types.add_item('Point',  	8)
+		self._objs_types.add_item('Circle',  	9)
+		self._objs_types.add_item('Circular light', 10)
+		self._objs_types.add_item('Rectangular light', 11)
 
 
 		self.init_form()
@@ -109,7 +115,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 			]
 
 
-		#self.__loadScene('py-3d-engine/examples/DolphinScene.obj')
+		self.__loadScene('/Users/ricardojvr/test.obj')
 		#print("------------ loaded -------------------------")
 
 	########################################################################
@@ -147,6 +153,9 @@ class SceneCalibrator(BaseWidget, GLScene):
 		if objtype==6: obj = PlaneWindow(self)
 		if objtype==7: obj = WavefrontWindow(self)
 		if objtype==8: obj = PointWindow(self)
+		if objtype==9: obj = CircleWindow(self)
+		if objtype==10: obj = CircularLightWindow(self)
+		if objtype==11: obj = RectangularLightWindow(self)
 
 		self.objects.append( obj )
 		self.update_objects_tree()
@@ -263,6 +272,10 @@ class SceneCalibrator(BaseWidget, GLScene):
 			if objtype=='CylinderObject': 	obj = CylinderWindow(self)
 			if objtype=='PlaneObject': 		obj = PlaneWindow(self)
 			if objtype=='PointObject': 		obj = PointWindow(self)
+			if objtype=='CircleObject': 	obj = CircleWindow(self)
+			if objtype=='CircularLightObject': 	obj = CircularLightWindow(self)
+			if objtype=='RectangularLightWindow': obj = RectangularLightWindow(self)
+
 
 			#For historical reasons
 			if objtype=='WavefrontObject' or objtype=='TerrainObject': 	obj = WavefrontWindow(self)
