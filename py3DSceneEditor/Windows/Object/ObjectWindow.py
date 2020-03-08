@@ -19,13 +19,25 @@ class ObjectWindow(BaseWidget):
 		
 		self._activeField 		= ControlCheckBox('Active')
 		self._objectName 		= ControlText('Name')
-		self._colorField 		= ControlText('Color', '1.0,1.0,1.0,1.0')
-		self._positionField 	= ControlText('Position', '0.0,0.0,0.0')
-		self._rotationField 	= ControlText('Rotation', '0.0,0.0,1.0,0.0')
-		self._centerOfMassField = ControlText('Mass center', '0.0,0.0,0.0')
+		self._colorField 		= ControlList('Color', default=[[0.0, 1.0, 0.0, 1.0]],
+										 horizontal_headers=['R', 'G', 'B', 'T'],
+										 resizecolumns=False, height=85)
+		self._positionField = ControlList('Position', default=[[0.0, 0.0, 0.0]],
+										 horizontal_headers=['X', 'Y', 'Z'],
+										 resizecolumns=False, height=85)
+		self._rotationField 	=  ControlList('Rotation', default=[[0.0,0.0,1.0,0.0]],
+										 horizontal_headers=['X', 'Y', 'Z', 'C'],
+										 resizecolumns=False, height=85)
+
+		self._centerOfMassField =  ControlList('Mass center', default=[[0.0,0.0,0.0]],
+										 horizontal_headers=['X', 'Y', 'Z'],
+										 resizecolumns=False, height=85)
+
+
+
 		self._refractionField 	= ControlText('Refraction', '')
 		self._parent_obj 		= ControlCombo('Parent object')
-		
+
 		
 		self._activeField.changed_event 	  = self.__active_changed_evt
 		self._objectName.changed_event 		  = self.__name_changed_evt
@@ -70,7 +82,7 @@ class ObjectWindow(BaseWidget):
 
 
 	def updateMesh(self): 
-		super(ObjectWindow, self).updateMesh()
+		super().updateMesh()
 		if hasattr(self, '_parent') and self._parent is not None:
 			self._parent.calculateCollisions()
 
@@ -92,27 +104,27 @@ class ObjectWindow(BaseWidget):
 	
 	def __color_changed_evt(self): 
 		try:
-			self.color = eval(self._colorField.value)
+			self.color = np.array(self._colorField.value[0], dtype=np.float)
 			self._parent.calculateCollisions()
 		except:
 			pass
 
 	def __position_changed_evt(self):
 		try:
-			self.position = eval(self._positionField.value)
+			self.position = np.array(self._positionField.value[0], dtype=np.float)
 			self._parent.calculateCollisions()
 		except:
 			pass
 
 	def __rotation_changed_evt(self):
 		try:
-			self.rotation = eval(self._rotationField.value)
+			self.rotation = np.array(self._rotationField.value, dtype=np.float)
 			self._parent.calculateCollisions()
 		except:
 			pass
 
 	def __center_of_mass_changed_evt(self):
-		self.centerOfMass = eval(self._centerOfMassField.value)
+		self.centerOfMass = np.array(self._centerOfMassField.value, dtype=np.float)
 		self._parent.calculateCollisions()
 
 	def __name_changed_evt(self):
@@ -125,10 +137,10 @@ class ObjectWindow(BaseWidget):
 	def afterLoadSceneObject(self):
 		super(ObjectWindow, self).afterLoadSceneObject()		
 		self._objectName.value			= self.name
-		self._colorField.value 			= str(self.color)
-		self._positionField.value 		= str(self.position)
-		self._rotationField.value 		= str(self.rotation)
-		self._centerOfMassField.value 	= str(self.centerOfMass)
+		self._colorField.value 			= [list(self.color)]
+		self._positionField.value 		= [self.position]
+		self._rotationField.value 		= [self.rotation]
+		self._centerOfMassField.value 	= [self.centerOfMass]
 		self._activeField.value			= self.active
 		self._refractionField.value		= '' if self.refraction==None else str(self.refraction)
 

@@ -3,28 +3,29 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3dengine.objects.CylinderObject import CylinderObject
+from py3dengine.objects.CircleObject import CircleObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
-class CylinderWindow(ObjectWindow, CylinderObject):
+class CircleWindow(ObjectWindow, CircleObject):
+
+	FORMSET = [ '_parent_obj', '_objectName',
+				'_positionField',
+				'_colorField','_faControl','_fbControl',' ']
 	
 	def __init__(self, parent=None):
 		ObjectWindow.__init__(self, parent)
-		CylinderObject.__init__(self)
+		CircleObject.__init__(self)
 
 
 		self._faControl = ControlText('A', str(self.fA) )
 		self._fbControl = ControlText('B', str(self.fB) )
-		self._heightControl = ControlText('Height', str(self.cylinderHeight) )
 
-		self._formset = [ '_parent_obj', '_objectName','_colorField','_faControl','_fbControl', '_heightControl',' ']
+		self.formset = self.FORMSET
 
 		self._faControl.changed_event = self.__faControlChanged
 		self._fbControl.changed_event = self.__fbControlChanged
-		self._heightControl.changed_event = self.__heightControlChanged
 
-		self.init_form()
 
 	def __faControlChanged(self): 
 		try:
@@ -40,30 +41,29 @@ class CylinderWindow(ObjectWindow, CylinderObject):
 		except:
 			pass
 
-	def __heightControlChanged(self): 
-		try:
-			self.cylinderHeight = eval(self._heightControl.value)
-			self._parent.repaint()
-		except:
-			pass
-
 
 
 	@property
-	def wavefrontobject(self): return super(CylinderWindow, self).wavefrontobject
+	def wavefrontobject(self): return super(CircleObject, self).wavefrontobject
 
 	@wavefrontobject.setter
 	def wavefrontobject(self, value):
-		CylinderObject.wavefrontobject.fset(self, value)
+		CircleObject.wavefrontobject.fset(self, value)
 		self._objectName.value = self.name
 		self._colorField.value = [self.color]
 		self._faControl.value = str(self.fA)
 		self._fbControl.value = str(self.fB)
-		self._heightControl.value = str(self.cylinderHeight)
-	
+
+	@property
+	def focal_point(self):
+		return float(self._focal_point.value)
+
+	@property
+	def rays_step(self):
+		return float(self._rays_step.value)
 ##################################################################################################################
 ##################################################################################################################
 ##################################################################################################################
 
-if __name__ == "__main__":	 app.start_app( CylinderWindow )
+if __name__ == "__main__":	 app.start_app( CircleObject )
 	

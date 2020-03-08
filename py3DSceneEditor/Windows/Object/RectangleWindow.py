@@ -2,23 +2,38 @@ from py3DSceneEditor.Windows.Object.__init__ import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+import numpy as np
 
 from py3dengine.objects.RectangleObject 	import RectangleObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
 class RectangleWindow(ObjectWindow, RectangleObject):
-	
+
+	FORMSET = [ '_parent_obj', '_objectName','_colorField','_p0','_p1','_p2','_p3', '_refractionField', ' ']
+
 	def __init__(self, parent=None):
 		ObjectWindow.__init__(self, parent)
 		RectangleObject.__init__(self)
 
-		self._p0 = ControlText('Point 0', str(self.point0) )
-		self._p1 = ControlText('Point 1', str(self.point1) )
-		self._p2 = ControlText('Point 2', str(self.point2) )
-		self._p3 = ControlText('Point 3', str(self.point3) )
 
-		self._formset = [ '_parent_obj', '_objectName','_colorField','_p0','_p1','_p2','_p3', '_refractionField', ' ']
+		self._p0 =  ControlList('Point 0', default=[list(self.point0)],
+					   horizontal_headers=['X', 'Y', 'Z'],
+					   resizecolumns=False, height=85)
+
+		self._p1 = ControlList('Point 1', default=[list(self.point1)],
+							   horizontal_headers=['X', 'Y', 'Z'],
+							   resizecolumns=False, height=85)
+
+		self._p2 = ControlList('Point 2', default=[list(self.point2)],
+							   horizontal_headers=['X', 'Y', 'Z'],
+							   resizecolumns=False, height=85)
+
+		self._p3 = ControlList('Point 3', default=[list(self.point3)],
+							   horizontal_headers=['X', 'Y', 'Z'],
+							   resizecolumns=False, height=85)
+
+		self.formset = self.FORMSET
 
 		self._p0.changed_event = self.__point0Changed
 		self._p1.changed_event = self.__point1Changed
@@ -29,28 +44,28 @@ class RectangleWindow(ObjectWindow, RectangleObject):
 
 	def __point0Changed(self): 
 		try:
-			self.point0 = eval(self._p0.value)
+			self.point0 = np.array(self._p0.value[0], dtype=np.float)
 			self._parent.calculateCollisions()
 		except:
 			pass
 
 	def __point1Changed(self): 
 		try:
-			self.point1 = eval(self._p1.value)
+			self.point1 = np.array(self._p1.value[0], dtype=np.float)
 			self._parent.calculateCollisions()
 		except:
 			pass
 
 	def __point2Changed(self): 
 		try:
-			self.point2 = eval(self._p2.value)
+			self.point2 = np.array(self._p2.value[0], dtype=np.float)
 			self._parent.calculateCollisions()
 		except:
 			pass
 
 	def __point3Changed(self): 
 		try:
-			self.point3 = eval(self._p3.value)
+			self.point3 = np.array(self._p3.value[0], dtype=np.float)
 			self._parent.calculateCollisions()
 		except:
 			pass
@@ -64,11 +79,11 @@ class RectangleWindow(ObjectWindow, RectangleObject):
 	def wavefrontobject(self, value):
 		RectangleObject.wavefrontobject.fset(self, value)
 		self._objectName.value = self.name
-		self._colorField.value = str(self.color)
-		self._p0.value = str(self.point0)
-		self._p1.value = str(self.point1)
-		self._p2.value = str(self.point2)
-		self._p3.value = str(self.point3)
+		self._colorField.value = [self.color]
+		self._p0.value = [self.point0]
+		self._p1.value = [self.point1]
+		self._p2.value = [self.point2]
+		self._p3.value = [self.point3]
 
 ##################################################################################################################
 ##################################################################################################################

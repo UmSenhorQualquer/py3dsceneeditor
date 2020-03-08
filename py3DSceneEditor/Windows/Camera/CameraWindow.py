@@ -36,19 +36,22 @@ class CameraWindow(BaseWidget, Camera):
 		self._toolbox = ControlToolBox('Properties')
 
 		self._videofile = ControlFile('Video'); 
-		self._distortion = ControlText('Distortion', '[-0.355507045984, 0.176486045122, 0.00165274133906, -0.000138058851007, -0.0518798902631]')
 		self._videoCalibrationBtn = ControlButton('Calibrate')
 		self._videoManualCalibrationBtn = ControlButton('Calibrate manually')
+
+		self._distortion = ControlList('Distortion', default=[[0, 0, 0, 0, 0]], resizecolumns=False, height=60)
 		
 		self._cameraName = ControlText('Name')
 		self._width = ControlText('Width', "1280")
 		self._height = ControlText('Height', "960")
 		self._fxField = ControlText('Focal x', '973.83868801')
 		self._fyField = ControlText('Focal y', '973.83868801')
-		self._cameraMtx = ControlTextArea('Camera matrix')
+
+		self._cameraMtx = ControlList('Camera matrix', default=[[0,0,0],[0,0,0],[0,0,0]], resizecolumns=False, height=120)
 
 		self._displayFocalLength = ControlSlider('Focal length', 1.0, 1.0, 100.0)
-		self._displayColor 		 = ControlText('Color','0.0,0.0,0.0,0.0')
+		self._displayColor  = ControlList('Color', default=[[0.0,0.0,0.0,0.0]], horizontal_headers=['R', 'G', 'B', 'T'],
+										  resizecolumns=False, height=85)
 		self._displayFaces 		 = ControlCheckBox('Display faces')
 		self._show 				 = ControlCheckBox('Show')
 		
@@ -57,13 +60,15 @@ class CameraWindow(BaseWidget, Camera):
 		self._findPosManuallyBtn = ControlButton('Find transf. manually')
 		self._showObjectsProjectionBtn = ControlButton('Show objects projection')
 
-		self._position = ControlText('Cam. Pos.', "0,0,0")
-		self._rotation = ControlText('Cam. Rot.', "0,0,0")
-		
-		self._raysList 		= ControlList('Rays')
-		self._addNewRay 	= ControlButton('New ray')
 
-		self._raysList.select_entire_row = True
+		self._position = ControlList('Position', default=[[0,0,0]], horizontal_headers=['X', 'Y', 'Z'],
+									 resizecolumns=False, height=85 )
+		self._rotation = ControlList('Rotation', default=[[0, 0, 0]], horizontal_headers=['X', 'Y', 'Z'],
+									 resizecolumns=False, height=85 )
+
+		self._rays_list = ControlList('Rays', horizontal_headers=['u','v'], resizecolumns=False, select_entire_row=True)
+		self._new_ray_btn = ControlButton('New ray')
+
 
 		self._toolbox.value = [ 
 			('Camera matrix and distortion',
@@ -74,19 +79,22 @@ class CameraWindow(BaseWidget, Camera):
 				self._videoCalibrationBtn,
 				self._videoManualCalibrationBtn]  ),
 			('Camera transformations',
-				[self._position,self._rotation,
-				self._findPositionWithArMarkerBtn,
-				self._findPositionWithChessMarkerBtn,
-				self._findPosManuallyBtn]
-				),
+				[
+					self._position,
+					self._rotation,
+					self._findPositionWithArMarkerBtn,
+					self._findPositionWithChessMarkerBtn,
+					self._findPosManuallyBtn
+				]
+			),
 			('Renderization',
 				[(self._show,self._displayFaces),
 				self._displayColor,
 				self._displayFocalLength,
 				self._showObjectsProjectionBtn]),
 			('Rays', 
-				[self._addNewRay,
-				self._raysList])
+				[self._new_ray_btn,
+				 self._rays_list])
 		]
 
 		self._formset = [
@@ -96,15 +104,15 @@ class CameraWindow(BaseWidget, Camera):
 
 		self.init_form()
 
-		self._raysList.add_popup_menu_option('Select ray in the image', self.__showSelectCameraRay)
-		self._raysList.add_popup_menu_option('Get intersection', self.__showIntersection)
-		self._raysList.add_popup_menu_option('-')
-		self._raysList.add_popup_menu_option('Calc distance between points', self.__showCalcDistance)
-		self._raysList.add_popup_menu_option('-')
-		self._raysList.add_popup_menu_option('Remove', self.__removeRay)
+		self._rays_list.add_popup_menu_option('Select ray in the image', self.__showSelectCameraRay)
+		self._rays_list.add_popup_menu_option('Get intersection', self.__showIntersection)
+		self._rays_list.add_popup_menu_option('-')
+		self._rays_list.add_popup_menu_option('Calc distance between points', self.__showCalcDistance)
+		self._rays_list.add_popup_menu_option('-')
+		self._rays_list.add_popup_menu_option('Remove', self.__removeRay)
 
 
-		self._raysList.changed_event 						= self.__rayChanged				
+		self._rays_list.changed_event 						= self.__ray_changed_evt
 		self._videoManualCalibrationBtn.value       = self.__manualCalibrateEvent
 		self._videoCalibrationBtn.value 			= self.__calibrateBtnEvent
 		self._findPosManuallyBtn.value 				= self.__findPositionManualEvent
@@ -120,49 +128,47 @@ class CameraWindow(BaseWidget, Camera):
 		self._height.changed_event 		= self.__imagePropHeightChanged
 		self._fxField.changed_event 		= self.__imagePropFxChanged
 		self._fyField.changed_event 		= self.__imagePropFyChanged
-		self._cameraMtx.changed_event     = self.__cameraMtxChanged
+		self._cameraMtx.changed_event     = self.__cameraMtx_changed_evt
 		self._distortion.changed_event 	= self.__imagePropDistortionChanged
 		
-		self._position.changed_event 			= self.__cameraPositionChanged
-		self._rotation.changed_event 			= self.__cameraRotationChanged
+		self._position.changed_event = self.__camera_position_changed_evt
+		self._rotation.changed_event = self.__camera_rotation_changed_evt
 
 		self._displayFocalLength.changed_event = self.__displayFocalLengthChanged
-		self._displayColor.changed_event 	= self.__displayColorChanged
+		self._displayColor.changed_event 	= self.__displayColor_changed_evt
 		self._displayFaces.changed_event 	= self.__displayFacesChanged
 		self._show.changed_event 			= self.__showChanged
 
-		self._addNewRay.value = self.__addNewRayEvent
+		self._new_ray_btn.value = self.__addNewRayEvent
 
 		self._updating = True
 
-	def __loadRays(self):
+	def __load_rays(self):
 		objs = []
-		for row in self._raysList.value:
-			cell = row[0]
+		for row in self._rays_list.value:
 			try:
-				u,v = eval(cell)
+				u,v = int(row[0]), int(row[1])
 				p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
 				ray = Ray(p0, p1)
 				objs.append( ray )
 			except Exception as e:
-				print("error converting ray", str(e))
+				print(e, "Error @__load_rays")
 		self.rays = objs
 
-	def __rayChanged(self, row=0, col=0):
-		if self._updating: 
-			print("Updated")
-			self.__loadRays()
+	def __ray_changed_evt(self, row=0, col=0):
+		if self._updating:
+			self.__load_rays()
 			self._parent.calculateCollisions()
 
 
 	def __addNewRayEvent(self): 
-		self._raysList += ['0,0']
-		self.__rayChanged()
+		self._rays_list += [0,0]
+		self.__ray_changed_evt()
 		
 
 	def __removeRay(self): 
-		self._raysList -= -1
-		self.__rayChanged()
+		self._rays_list -= -1
+		self.__ray_changed_evt()
 	
 	def __showIntersection(self):
 		ray = self.selectedRay
@@ -177,7 +183,7 @@ class CameraWindow(BaseWidget, Camera):
 	def DistanceBetween(p0, p1):   return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2 + (p0[2] - p1[2])**2)
 
 	def __showCalcDistance(self):
-		rays = self.selectedRays
+		rays = self.selectedRays()
 
 		if len(rays)==2: 
 			ray1, ray2 = rays
@@ -214,30 +220,32 @@ class CameraWindow(BaseWidget, Camera):
 		self._manualCalibrationWindow._player.value 	= self._videofile.value
 
 
-	def __cameraPositionChanged(self):
+	def __camera_position_changed_evt(self):
 		try:
-			self.position 		= eval( self._position.value )
-			#self._parent.repaint()
-			self.__loadRays()
-			self._parent.calculateCollisions()
-		except: 
-			print("error in CameraWindow in the function __cameraPositionChanged")
 
-	def __cameraRotationChanged(self):
-		try:
-			self.rotationVector = eval( self._rotation.value )
+			self.position = np.array(self._position.value, dtype=np.float)
 			#self._parent.repaint()
-			self.__loadRays()
+			self.__load_rays()
 			self._parent.calculateCollisions()
-		except: print("error in CameraWindow in the function __cameraRotationChanged")
+		except Exception as e:
+			print(e, "error in CameraWindow in the function __camera_position_changed_evt")
+
+	def __camera_rotation_changed_evt(self):
+		try:
+			self.rotationVector = self._rotation.value[0]
+			#self._parent.repaint()
+			self.__load_rays()
+			self._parent.calculateCollisions()
+		except Exception as e:
+			print(e, "error in CameraWindow in the function __camera_rotation_changed_evt")
 
 	def __displayFocalLengthChanged(self): 
 		self.maxFocalLength = float(self._displayFocalLength.value);
 		self._parent.repaint()
 	
-	def __displayColorChanged(self):
+	def __displayColor_changed_evt(self):
 		try:
-			self._color = eval(self._displayColor.value);
+			self._color = np.array(self._displayColor.value[0], dtype=np.float)
 			self._parent.repaint()
 		except:
 			pass
@@ -252,6 +260,7 @@ class CameraWindow(BaseWidget, Camera):
 			self.cameraWidth = 0
 		self.cameraCx = self.cameraWidth / 2.0
 		self._parent.repaint()
+
 	def __imagePropHeightChanged(self):
 		try:
 			self.cameraHeight = float(self._height.value)
@@ -259,16 +268,20 @@ class CameraWindow(BaseWidget, Camera):
 			self.cameraHeight = 0
 		self.cameraCy = self.cameraHeight / 2.0
 		self._parent.repaint()
-	def __cameraMtxChanged(self):
+
+	def __cameraMtx_changed_evt(self):
 		try:
-			self.cameraMatrix 	= matrix( eval(self._cameraMtx.value) )
-			self._width.value 	= str(self.cameraMatrix[0,2]*2)
-			self._height.value 	= str(self.cameraMatrix[1,2]*2)
-			self._fxField.value = str(self.cameraMatrix[0,0])
-			self._fyField.value = str(self.cameraMatrix[1,1])
+			m = np.array(self._cameraMtx.value, dtype=np.float)
+			self.cameraMatrix = np.matrix(m, dtype=np.float)
+
+			self._width.value = str(m[0][2]*2)
+			self._height.value 	= str(m[1][2]*2)
+			self._fxField.value = str(m[0][0])
+			self._fyField.value = str(m[1][1])
 			self._parent.repaint()
-		except:
-			pass
+
+		except Exception as e:
+			print(e, "Error @__cameraMtx_changed_evt")
 		
 
 	def __imagePropFxChanged(self):
@@ -324,15 +337,15 @@ class CameraWindow(BaseWidget, Camera):
 			del self._parentRowControl
 		
 	
-	@property
+
 	def selectedRays(self):
-		indexes = self._raysList.mouseSelectedRowsIndexes
+		indexes = self._rays_list.selected_rows_indexes
 		if indexes==None: return None
 		res = []
 		for index in indexes:
-			cell = self._raysList.value[index][0]
+			row = self._rays_list.value[index][0]
 			try:
-				u,v = eval(cell)
+				u,v = int(row[0]), int(row[1])
 				p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
 				ray = Ray(p0, p1)
 				res.append(ray)
@@ -342,12 +355,12 @@ class CameraWindow(BaseWidget, Camera):
 
 	@property
 	def selectedRay(self):
-		index = self._raysList.selected_row_index
+		index = self._rays_list.selected_row_index
 		if index==None: return None
 
-		cell = self._raysList.value[index][0]
+		row = self._rays_list.value[index][0]
 		try:
-			u,v = eval(cell)
+			u,v = int(row[0]), int(row[1])
 			p0, p1 = self.pixelLinePoints(u,v, self.maxFocalLength)
 			ray = Ray(p0, p1)
 			return ray
@@ -357,9 +370,9 @@ class CameraWindow(BaseWidget, Camera):
 	@selectedRay.setter
 	def selectedRay(self, value):
 		if isinstance(value, tuple): 
-			index = self._raysList.selected_row_index
-			self._raysList.setValue(0, index, str(value).replace(')','').replace('(',''))
-			self.__rayChanged()
+			index = self._rays_list.selected_row_index
+			self._rays_list.setValue(0, index, str(value).replace(')', '').replace('(', ''))
+			self.__ray_changed_evt()
 
 
 	def DrawGL(self, objects=[]):
@@ -379,21 +392,21 @@ class CameraWindow(BaseWidget, Camera):
 
 	def refreshWindowValues(self):
 
-		self._position.value 	= ','.join(map(str,self.position.tolist()))
-		self._rotation.value 	= ','.join(map(str,self.rotationVector.tolist()))
+		self._position.value = self.position.tolist()
+		self._rotation.value = [self.rotationVector.tolist()]
 		
-		self._distortion.value 			= ','.join(map(str,self.cameraDistortion.tolist()))
+		self._distortion.value 			= self.cameraDistortion.tolist()
 		self._cameraName.value 			= self.name
 		self._width.value 				= str(self.cameraMatrix[0,2]*2)
 		self._height.value 				= str(self.cameraMatrix[1,2]*2)
 		self._fxField.value 			= str(self.cameraMatrix[0,0])
 		self._fyField.value 			= str(self.cameraMatrix[1,1])
 		self._displayFocalLength.value 	= self.maxFocalLength
-		self._displayColor.value 		= str(','.join(map(str,self.color)))
+		self._displayColor.value 		= [self.color]
 		self._displayFaces.value 		= self.showFaces
-		self._cameraMtx.value 			= np.array2string(self.cameraMatrix, separator=',', suppress_small=True)
+		self._cameraMtx.value 			= self.cameraMatrix.tolist()
 		
-		self.__loadRays()
+		self.__load_rays()
 		
 
 ##########################################################################################
@@ -406,8 +419,8 @@ class CameraWindow(BaseWidget, Camera):
 		obj.addProperty('videofile', self._videofile.value)
 		obj.addProperty('visible', 	self._show.value )
 
-		obj.addProperty('nrays', len(self._raysList.value) )
-		for i, row in enumerate(self._raysList.value): obj.addProperty('ray_%d' % i, row[0] )
+		obj.addProperty('nrays', len(self._rays_list.value))
+		for i, row in enumerate(self._rays_list.value): obj.addProperty('ray_%d' % i, ','.join(row) )
 			
 		return obj
 
@@ -425,7 +438,7 @@ class CameraWindow(BaseWidget, Camera):
 		else: nrays = 0
 
 		for i in range(nrays):
-			self._raysList += [ str(value.getProperty('ray_%d' % i)) ]
+			self._rays_list += list(map(int, value.getProperty('ray_%d' % i).split(',')))
 
 		self.refreshWindowValues()
 		self._updating = True

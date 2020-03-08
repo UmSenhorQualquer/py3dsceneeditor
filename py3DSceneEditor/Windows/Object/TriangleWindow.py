@@ -53,7 +53,7 @@ class TriangleWindow(ObjectWindow, TriangleObject):
 	def wavefrontobject(self, value):
 		TriangleObject.wavefrontobject.fset(self, value)
 		self._objectName.value = self.name
-		self._colorField.value = str(self.color)
+		self._colorField.value = [self.color]
 		self._p0.value = str(self.point0)
 		self._p1.value = str(self.point1)
 		self._p2.value = str(self.point2)
