@@ -1,14 +1,9 @@
-from py3dengine.objects.RectangularLightObject import RectangularLightObject
+from py3dengine.lights.rectangular import RectangularLightObject
 
 from py3DSceneEditor.Windows.Object.RectangleWindow import RectangleWindow
 from py3DSceneEditor.Windows.Object.__init__ import *
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
-import numpy as np
 
-from py3dengine.objects.RectangleObject 	import RectangleObject
-from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
+from py3dengine.objects.rectangle 	import RectangleObject
 
 
 class RectangularLightWindow(RectangleWindow, RectangularLightObject):

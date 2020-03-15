@@ -29,7 +29,7 @@ class ObjectWindow(BaseWidget):
 										 horizontal_headers=['X', 'Y', 'Z', 'C'],
 										 resizecolumns=False, height=85)
 
-		self._centerOfMassField =  ControlList('Mass center', default=[[0.0,0.0,0.0]],
+		self._center_of_massField =  ControlList('Mass center', default=[[0.0,0.0,0.0]],
 										 horizontal_headers=['X', 'Y', 'Z'],
 										 resizecolumns=False, height=85)
 
@@ -44,7 +44,7 @@ class ObjectWindow(BaseWidget):
 		self._colorField.changed_event 		  = self.__color_changed_evt
 		self._positionField.changed_event 	  = self.__position_changed_evt
 		self._rotationField.changed_event 	  = self.__rotation_changed_evt
-		self._centerOfMassField.changed_event = self.__center_of_mass_changed_evt
+		self._center_of_massField.changed_event = self.__center_of_mass_changed_evt
 		self._refractionField.changed_event   = self.__refraction_changed_evt
 		self._parent_obj.changed_event 		  = self.__parent_obj_changed_evt
 
@@ -76,7 +76,7 @@ class ObjectWindow(BaseWidget):
 			if obj==self: continue
 			self._parent_obj.add_item(obj.name, obj)
 
-		self._parent_obj.value = self.parentObj
+		self._parent_obj.value = self.parent_object
 
 		del self._updating_objectslist # delete the flag
 
@@ -95,9 +95,9 @@ class ObjectWindow(BaseWidget):
 	def __parent_obj_changed_evt(self):
 		if hasattr(self, '_updating_objectslist'): return
 		if self._parent_obj.value:
-			self.parentObj = self._parent_obj.value
+			self.parent_object = self._parent_obj.value
 		else:
-			self.parentObj = None
+			self.parent_object = None
 		self._parent.update_objects_tree()
 
 	def __active_changed_evt(self): self.active = self._activeField.value
@@ -124,7 +124,7 @@ class ObjectWindow(BaseWidget):
 			pass
 
 	def __center_of_mass_changed_evt(self):
-		self.centerOfMass = np.array(self._centerOfMassField.value, dtype=np.float)
+		self.center_of_mass = np.array(self._center_of_massField.value, dtype=np.float)
 		self._parent.calculateCollisions()
 
 	def __name_changed_evt(self):
@@ -134,13 +134,13 @@ class ObjectWindow(BaseWidget):
 		if treeItem: treeItem.setText(0, self.name)
 		ObjectWindow.update_allobjects_list()
 
-	def afterLoadSceneObject(self):
-		super(ObjectWindow, self).afterLoadSceneObject()		
+	def after_load_scene_object(self):
+		super(ObjectWindow, self).after_load_scene_object()
 		self._objectName.value			= self.name
 		self._colorField.value 			= [list(self.color)]
 		self._positionField.value 		= [self.position]
 		self._rotationField.value 		= [self.rotation]
-		self._centerOfMassField.value 	= [self.centerOfMass]
+		self._center_of_massField.value 	= [self.center_of_mass]
 		self._activeField.value			= self.active
 		self._refractionField.value		= '' if self.refraction==None else str(self.refraction)
 

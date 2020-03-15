@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3dengine.objects.TriangleObject import TriangleObject
+from py3dengine.objects.triangle import TriangleObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 

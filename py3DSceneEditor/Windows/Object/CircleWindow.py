@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3dengine.objects.CircleObject import CircleObject
+from py3dengine.objects.circle import CircleObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 

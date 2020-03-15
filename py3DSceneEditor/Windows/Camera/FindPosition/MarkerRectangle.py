@@ -23,7 +23,7 @@ def RotateImage(image, angle):
 	else:
 		raise Exception( 'Unable to acquire dimensions of image for type {0}.'.format(type(image)) )
 	
-	rot_mat = cv2.getRotationMatrix2D(image_center[0:2], angle, scale=1.0)
+	rot_mat = cv2.getrotation_matrix2D(image_center[0:2], angle, scale=1.0)
 	result = cv2.warpAffine(image, rot_mat, shape[0:2], flags=cv2.INTER_LINEAR)
 	return result
 

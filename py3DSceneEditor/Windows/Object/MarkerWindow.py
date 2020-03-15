@@ -5,7 +5,7 @@ from OpenGL.GLU import *
 
 import numpy as np
 
-from py3dengine.objects.MarkerObject 	import MarkerObject
+from py3dengine.objects.marker 	import MarkerObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 

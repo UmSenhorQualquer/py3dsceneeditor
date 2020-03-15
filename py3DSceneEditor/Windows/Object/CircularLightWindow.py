@@ -1,9 +1,6 @@
 from py3DSceneEditor.Windows.Object.__init__ import *
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
 
-from py3dengine.objects.CircularLightObject import CircularLightObject
+from py3dengine.lights.circular import CircularLightObject
 from .CircleWindow import CircleWindow
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 

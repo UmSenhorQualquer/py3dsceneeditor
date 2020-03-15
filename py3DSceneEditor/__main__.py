@@ -28,7 +28,7 @@ from py3DSceneEditor.Windows.Object.WavefrontWindow import WavefrontWindow
 from py3DSceneEditor.Windows.Object.CircleWindow    import CircleWindow
 from py3DSceneEditor.Windows.Object.CircularLightWindow import CircularLightWindow
 
-from py3dengine.scenes.GLScene import GLScene
+from py3dengine.scenes.glscene import GLScene
 from py3DSceneEditor.Windows.py3Dscene_window import Py3DSceneWindow
 
 from py3dengine.utils.WavefrontOBJFormat.WavefrontOBJReader import WavefrontOBJReader
@@ -177,10 +177,12 @@ class SceneCalibrator(BaseWidget, GLScene):
 		if objects==None: 	objects = self._objects
 
 		for obj in objects:
-			if not(tree_node==None and obj.parentObj!=None):
+			if not(tree_node==None and obj.parent_object!=None):
 				item = self._objtree.create_child(obj.name, tree_node)
 				self._objtree.add_popup_menu_option('Remove', self.__delete_object, item=item)
-				self.update_objects_tree(obj.childs, item)
+
+				print(self.children())
+				self.update_objects_tree(obj.children_objects, item)
 
 		ObjectWindow.update_allobjects_list()
 

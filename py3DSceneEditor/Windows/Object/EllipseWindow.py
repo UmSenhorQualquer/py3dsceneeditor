@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3dengine.objects.EllipseObject import EllipseObject
+from py3dengine.objects.ellipse import EllipseObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 

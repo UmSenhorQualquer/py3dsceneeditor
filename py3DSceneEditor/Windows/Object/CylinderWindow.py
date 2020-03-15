@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3dengine.objects.CylinderObject import CylinderObject
+from py3dengine.objects.cylinder import CylinderObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 

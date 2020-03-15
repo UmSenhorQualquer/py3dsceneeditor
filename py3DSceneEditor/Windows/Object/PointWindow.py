@@ -4,7 +4,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
 import numpy as np
-from py3dengine.objects.PointObject import PointObject
+from py3dengine.objects.point import PointObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 

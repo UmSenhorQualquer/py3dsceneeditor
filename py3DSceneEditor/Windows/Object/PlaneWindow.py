@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3dengine.objects.PlaneObject import PlaneObject
+from py3dengine.objects.plane import PlaneObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -19,7 +19,7 @@ class PlaneWindow(ObjectWindow, PlaneObject):
 
 		self._formset = [ '_parent_obj', '_activeField',
 			'_objectName','_colorField',
-			'_centerOfMassField',
+			'_center_of_massField',
 			'_positionField','_rotationField',
 			'_width','_height','_maskField', '_refractionField',' ']
 
@@ -50,8 +50,8 @@ class PlaneWindow(ObjectWindow, PlaneObject):
 		except:
 			pass
 
-	def afterLoadSceneObject(self):
-		super(PlaneWindow, self).afterLoadSceneObject()
+	def after_load_scene_object(self):
+		super(PlaneWindow, self).after_load_scene_object()
 		self._width.value 				= str(self.objwidth)
 		self._height.value 				= str(self.objheight)
 		self._maskField.value 			= str(self.maskimg)

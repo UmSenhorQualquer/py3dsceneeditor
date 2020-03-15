@@ -4,7 +4,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import numpy as np
 
-from py3dengine.objects.RectangleObject 	import RectangleObject
+from py3dengine.objects.rectangle 	import RectangleObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 

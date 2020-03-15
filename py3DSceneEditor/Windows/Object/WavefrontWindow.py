@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-from py3dengine.objects.WavefrontObject import WavefrontObject
+from py3dengine.objects.wavefront import WavefrontObject
 from py3DSceneEditor.Windows.Object.ObjectWindow import ObjectWindow
 
 
@@ -20,7 +20,7 @@ class WavefrontWindow(ObjectWindow, WavefrontObject):
 		
 		self._formset = [  '_parent_obj',
 			'_objectName','_colorField',
-			'_centerOfMassField',
+			'_center_of_massField',
 			'_positionField','_rotationField',
 			'_terrainField', '_reloadBtn',
 			'_resolutionField','_amplitudeField',' ' ]
@@ -38,8 +38,8 @@ class WavefrontWindow(ObjectWindow, WavefrontObject):
 	def __reloadObj(self): 			self.terrain = self._terrainField.value
 
 	
-	def afterLoadSceneObject(self):
-		super(WavefrontWindow, self).afterLoadSceneObject()
+	def after_load_scene_object(self):
+		super(WavefrontWindow, self).after_load_scene_object()
 		self._terrainField.value = str(self._terrainFile)
 		self._resolutionField.value = str(self.resolution)
 		self._amplitudeField.value = str(self.amplitude)
