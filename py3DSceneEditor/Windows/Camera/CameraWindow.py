@@ -14,6 +14,10 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import math, numpy as np
 
+import coloredlogs, logging
+logger = logging.getLogger(__name__)
+coloredlogs.install()
+
 class CameraWindow(BaseWidget, Camera):
 	
 	def __init__(self, parent=None):
@@ -60,6 +64,8 @@ class CameraWindow(BaseWidget, Camera):
 		self._findPosManuallyBtn = ControlButton('Find transf. manually')
 		self._showObjectsProjectionBtn = ControlButton('Show objects projection')
 
+		self._clone_btn = ControlButton('Clone', default=self.__clone_btn_evt)
+
 
 		self._position = ControlList('Position', default=[[0,0,0]], horizontal_headers=['X', 'Y', 'Z'],
 									 resizecolumns=False, height=85 )
@@ -73,11 +79,12 @@ class CameraWindow(BaseWidget, Camera):
 		self._toolbox.value = [ 
 			('Camera matrix and distortion',
 				[(self._width, self._height),
-				(self._fxField, self._fyField), 
-				self._cameraMtx,
-				self._distortion,
-				self._videoCalibrationBtn,
-				self._videoManualCalibrationBtn]  ),
+				 (self._fxField, self._fyField),
+				 self._cameraMtx,
+				 self._distortion,
+				 self._videoCalibrationBtn,
+				 self._videoManualCalibrationBtn,
+				 self._clone_btn]),
 			('Camera transformations',
 				[
 					self._position,
@@ -142,6 +149,13 @@ class CameraWindow(BaseWidget, Camera):
 		self._new_ray_btn.value = self.__addNewRayEvent
 
 		self._updating = True
+
+	def __clone_btn_evt(self):
+		camera = self._parent.add_camera()
+		camera.cameraDistortion = self.cameraDistortion
+		camera.cameraMatrix = self.cameraMatrix
+		camera.refreshWindowValues()
+		logger.debug(f'The camera {self.name} was cloned.')
 
 	def __load_rays(self):
 		objs = []
@@ -392,10 +406,13 @@ class CameraWindow(BaseWidget, Camera):
 
 	def refreshWindowValues(self):
 
+		print(self.cameraMatrix.tolist())
+		print('distortion', self.cameraDistortion.tolist())
+
 		self._position.value = self.position.tolist()
 		self._rotation.value = [self.rotationVector.tolist()]
 		
-		self._distortion.value 			= self.cameraDistortion.tolist()
+		self._distortion.value 			= [self.cameraDistortion.tolist()]
 		self._cameraName.value 			= self.name
 		self._width.value 				= str(self.cameraMatrix[0,2]*2)
 		self._height.value 				= str(self.cameraMatrix[1,2]*2)
@@ -405,7 +422,7 @@ class CameraWindow(BaseWidget, Camera):
 		self._displayColor.value 		= [self.color]
 		self._displayFaces.value 		= self.showFaces
 		self._cameraMtx.value 			= self.cameraMatrix.tolist()
-		
+
 		self.__load_rays()
 		
 

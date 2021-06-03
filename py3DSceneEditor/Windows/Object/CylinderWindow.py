@@ -18,7 +18,19 @@ class CylinderWindow(ObjectWindow, CylinderObject):
 		self._fbControl = ControlText('B', str(self.fB) )
 		self._heightControl = ControlText('Height', str(self.cylinderHeight) )
 
-		self._formset = [ '_parent_obj', '_objectName','_colorField','_faControl','_fbControl', '_heightControl',' ']
+		self._formset = [
+			'_parent_obj',
+			'_objectName',
+			'_positionField',
+			'_rotationField',
+			'_colorField',
+			'_faControl',
+			'_fbControl',
+			'_heightControl',
+			'_center_of_massField',
+			'_refractionField',
+			' '
+		]
 
 		self._faControl.changed_event = self.__faControlChanged
 		self._fbControl.changed_event = self.__fbControlChanged

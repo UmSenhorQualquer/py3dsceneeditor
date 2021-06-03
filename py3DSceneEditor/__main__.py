@@ -1,5 +1,5 @@
 from confapp import conf
-import numpy as np
+import numpy as np, os
 
 from AnyQt.QtWidgets import QFileDialog
 import pyforms
@@ -11,7 +11,6 @@ from pyforms.controls 	import ControlDockWidget
 from pyforms.controls 	import ControlToolBox
 from pyforms.controls 	import ControlTree
 from pyforms.controls 	import ControlMdiArea
-
 
 from py3DSceneEditor.Windows.Camera.CameraWindow 	import CameraWindow
 from py3DSceneEditor.Windows.Object.ObjectWindow 	import ObjectWindow
@@ -35,7 +34,9 @@ from py3dengine.utils.WavefrontOBJFormat.WavefrontOBJReader import WavefrontOBJR
 from py3dengine.utils.WavefrontOBJFormat.WavefrontOBJWriter import WavefrontOBJWriter
 
 
-
+import coloredlogs, logging
+logger = logging.getLogger(__name__)
+coloredlogs.install()
 
 
 class SceneCalibrator(BaseWidget, GLScene):
@@ -69,7 +70,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self.docks = {'right': [self._tooldock, self._detaildock] }
 
 		#Events
-		self._add_cam_btn.value 	= self.__add_camera
+		self._add_cam_btn.value 	= self.add_camera
 		self._add_obj_btn.value 	= self.__add_object
 		
 		self._scenewindow.scene		= self
@@ -108,14 +109,16 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self.mainmenu = [
 				{
 					'File': [
-						{'Open scene': 	  self.__importData},
-						{'Save scene as': self.__exportData}
+						{'Open scene': 	  self.__open_project_evt},
+						{'Save': self.__save_project_evt},
+						{'Save scene as': self.__save_as_project_evt}
 					]
 				}
 			]
 
 
-		self.__loadScene('/Users/ricardojvr/test.obj')
+		if os.path.exists('/Users/ricardojvr/test.obj'):
+			self.__loadScene('/Users/ricardojvr/test.obj')
 		#print("------------ loaded -------------------------")
 
 	########################################################################
@@ -129,11 +132,13 @@ class SceneCalibrator(BaseWidget, GLScene):
 			cell = self._cameras.get_cell(0, row)
 			self._detaildock.value = cell._window
 
-	def __add_camera(self): 
+	def add_camera(self):
 		self._cameras += ['New camera']
 		row = self._cameras.get_cell(0, self._cameras.rows_count-1)
 		row._window = CameraWindow(self)
 		row._window.parentRowControl = row
+		row._window.refreshWindowValues()
+		return row._window
 
 	def __delete_camera(self): self._cameras -= -1
 
@@ -157,7 +162,7 @@ class SceneCalibrator(BaseWidget, GLScene):
 		if objtype==10: obj = CircularLightWindow(self)
 		if objtype==11: obj = RectangularLightWindow(self)
 
-		self.objects.append( obj )
+		self.objects.append(obj)
 		self.update_objects_tree()
 
 	def __delete_object(self):
@@ -187,7 +192,8 @@ class SceneCalibrator(BaseWidget, GLScene):
 		ObjectWindow.update_allobjects_list()
 
 
-	def __object_selection_changed_event(self): 
+	def __object_selection_changed_event(self):
+		print(self._objtree.selected_item)
 		item = self._objtree.selected_item
 		if item!=None:
 			win = self.getObject( str(item.text(0)) )
@@ -224,15 +230,24 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self.repaint();
 
 
-	def __importData(self):
+	def __open_project_evt(self):
 		filename, _ = QFileDialog.getOpenFileName(self, "Open file", "", "*.obj")
-		if filename: self.__loadScene(filename)
+		if filename:
+			self.__loadScene(filename)
 
-	def __exportData(self):
+	def __save_as_project_evt(self):
 		filename, _ = QFileDialog.getSaveFileName(self, "Save file", "", "*.obj")
 		if filename: 
 			if not filename.endswith('.obj'): filename += '.obj'
-			self.__saveScene(filename)
+			self._project_filename = filename
+			self.__save_scene(filename)
+
+	def __save_project_evt(self):
+		if hasattr(self, '_project_filename'):
+			self.__save_scene(self._project_filename)
+			logger.debug('The project was saved')
+		else:
+			logger.warning('The project was not saved')
 
 	def __loadScene(self, filename):
 		w = WavefrontOBJReader(filename)
@@ -240,16 +255,15 @@ class SceneCalibrator(BaseWidget, GLScene):
 		self.cameras = w.cameras
 
 		self.calculateCollisions()
+		self._project_filename = filename
 		
 	def getSceneModelTree(self, findNode=None): return self._objtree._model.nodeChildrens(findNode=findNode)
 
 	def repaint(self): 
 		self._scenewindow.repaint()
 
-
-
-
-	def __saveScene(self, filename): WavefrontOBJWriter(self).export(filename)
+	def __save_scene(self, filename):
+		WavefrontOBJWriter(self).export(filename)
 
 	@property
 	def objects(self): 
